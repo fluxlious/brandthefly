@@ -24,6 +24,8 @@
 *{box-sizing:border-box}
 html,body{background:var(--ground);color:var(--ink)}
 body{margin:0;font:15px/1.5 var(--ui);padding-inline:clamp(16px,2.5vw,32px);padding-block:18px 40px;-webkit-font-smoothing:antialiased}
+/* studio at 85% on wide screens (its type is already small); phones keep full size */
+@media (min-width:961px){body{zoom:.85}}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--stim);outline-offset:2px}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
