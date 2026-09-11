@@ -324,9 +324,9 @@ footer a{color:var(--dim)}
     </div>
     <div class="mood" id="moodPanel">
       <div class="mood-head"><b><span class="step">3</span>How the fly feels about <span class="brandname" id="moodBrand">your brand</span></b><small>live, from its output neurons · same brain for every brand</small></div>
-      <div class="mbar"><span>Appetite <small>proboscis neuron vs a real sugar taste</small></span><b id="mA">0%</b><i><span id="mAb" style="width:2%;background:#62E2FF"></span></i></div>
-      <div class="mbar"><span>Curiosity <small>antenna motor neurons</small></span><b id="mC">0%</b><i><span id="mCb" style="width:2%;background:#FF8A3D"></span></i></div>
-      <div class="mbar"><span>Brain buzz <small>neurons that fired so far</small></span><b id="mB">0</b><i><span id="mBb" style="width:2%;background:#F2F4F8"></span></i></div>
+      <div class="mbar"><span>Hungry? <small>its tongue neuron vs a real sugar taste</small></span><b id="mA">0%</b><i><span id="mAb" style="width:2%;background:#62E2FF"></span></i></div>
+      <div class="mbar"><span>Curious? <small>its antenna neurons</small></span><b id="mC">0%</b><i><span id="mCb" style="width:2%;background:#FF8A3D"></span></i></div>
+      <div class="mbar"><span>Brain cells lit up <small>out of 138,639</small></span><b id="mB">0</b><i><span id="mBb" style="width:2%;background:#F2F4F8"></span></i></div>
       <div class="mood-foot"><span class="vpill noticed" id="moodPill">Fly is thinking…</span><span class="critic" id="moodCritic"></span></div>
     </div>
     </div>
@@ -383,7 +383,7 @@ footer a{color:var(--dim)}
     <div class="eyebrow">Fly moods</div>
     <h2>How did the fly feel about it?</h2>
     <div class="approval"><b id="approval">0%</b><span><span id="approvalLabel">as tasty as sugar</span><small id="approvalSub"></small></span></div>
-    <p class="lede">Every brand gets the same brain, so nobody gets a better mood by asking nicely. Fun labels, real neurons: appetite is its proboscis motor neuron compared with a real sugar taste, curiosity is its antenna motor neurons, buzz is how much of its brain fired.</p>
+    <p class="lede">Every brand gets the same brain, so nobody gets a better mood by asking nicely. Fun labels, real neurons: hungry is its tongue neuron compared with a real sugar taste, curious is its antenna neurons, and brain cells lit up is how much of its brain fired.</p>
     <div class="verdict-list" id="verdictList"></div>
     <div class="row-btns"><a class="btn primary" href="#preview">Burn your brand</a></div>
   </section>
@@ -460,7 +460,7 @@ function moodOf(v) {
   const kind = appetite >= 50 ? 'taste' : appetite >= 10 ? 'intrigued' : curiosity >= 30 ? 'curious' : 'noticed';
   return { buzz, appetite, curiosity, kind };
 }
-const MOOD_TEXT = { taste: 'The fly wants a taste', intrigued: 'The fly is intrigued', curious: 'The fly is curious', noticed: 'The fly noticed you' };
+const MOOD_TEXT = { taste: 'The fly wants to eat it', intrigued: 'The fly is into it', curious: 'The fly is a bit curious', noticed: "The fly noticed it. That's it." };
 /* ---------- ticker tape ---------- */
 (() => {
   const byA = CONFIG.verdicts.slice().sort((a, b) => moodOf(b).appetite - moodOf(a).appetite)[0];
@@ -710,15 +710,15 @@ function renderFly(f) {
   ctx.fillStyle = `rgba(0,0,0,${0.45 - 0.2 * st.z})`; ctx.beginPath(); ctx.ellipse(0, 0, ppm * 0.55, ppm * 1.35, 0, 0, 7); ctx.fill(); ctx.restore();
   drawFly(ctx, cx, cy, ppm * (1 + 0.28 * st.z), st);
   const chips = [];
-  if (F.air[k]) chips.push('Escape takeoff');
-  else if (F.back[k] > 0.25) chips.push('Walking backward');
+  if (F.air[k]) chips.push('Nope. Flying off');
+  else if (F.back[k] > 0.25) chips.push('Backing away');
   else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) chips.push('Turning left');
   else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) chips.push('Turning right');
   else if (F.walk[k] > 0.25) chips.push('Walking');
-  if (F.prob[k] > 0.3) chips.push('Proboscis out');
-  if (F.pump[k] > 0.3) chips.push('Swallowing');
-  if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitch');
-  if (Math.abs(F.yaw[k]) > 0.08) chips.push('Head turn');
+  if (F.prob[k] > 0.3) chips.push('Tongue out');
+  if (F.pump[k] > 0.3) chips.push('Gulping');
+  if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitching');
+  if (Math.abs(F.yaw[k]) > 0.08) chips.push('Looking at it');
   const html = chips.length ? chips.map(t => `<span class="chip">${t}</span>`).join('') : '<span class="chip calm">Waiting for your logo</span>';
   if (html !== lastChips) { $('chips').innerHTML = html; lastChips = html; }
 }
@@ -875,9 +875,9 @@ function renderVerdicts() {
   $('verdictList').innerHTML = vs.map((v, i) => {
     const m = moodOf(v);
     return `<article class="vcard${i === 0 ? ' top' : ''}"><div class="bn">${esc(v.brand)}${v.note ? `<small>${esc(v.note)}</small>` : ''}</div>
-      ${bar('Appetite · vs sugar', m.appetite, Math.round(m.appetite) + '%', '#62E2FF')}
-      ${bar('Curiosity · antennae', m.curiosity, Math.round(m.curiosity) + '%', '#FF8A3D')}
-      ${bar('Brain buzz', m.buzz * 4, `${v.neurons.toLocaleString('en-US')} neurons · ${m.buzz.toFixed(1)}%`, '#F2F4F8')}
+      ${bar('Hungry? · vs real sugar', m.appetite, Math.round(m.appetite) + '%', '#62E2FF')}
+      ${bar('Curious? · antennae', m.curiosity, Math.round(m.curiosity) + '%', '#FF8A3D')}
+      ${bar('Brain cells lit up', m.buzz * 4, `${v.neurons.toLocaleString('en-US')} · ${m.buzz.toFixed(1)}%`, '#F2F4F8')}
       <span class="vpill ${m.kind}">${MOOD_TEXT[m.kind]}</span>
       <span class="critic">Dopamine critic: reward ${Math.round(v.reward)} Hz · punishment ${Math.round(v.punishment)} Hz. Tough crowd.</span></article>`;
   }).join('');
@@ -901,7 +901,7 @@ $('copyMsg').onclick = async () => {
 function updateShare() {
   const brand = pvMode === 'logo' ? 'my logo' : ($('brandIn').value.trim() || 'my brand');
   const v = CLIP && CLIP.lastVerdict;
-  const line = v ? `I made a real fruit fly brain think about ${brand}: 138,639 simulated neurons. ${MOOD_TEXT[v.kind]}, ${v.neurons.toLocaleString('en-US')} neurons lit up. Even a fly's brain is ad space now.` : `I just made a real fruit fly brain think about ${brand}, 138,639 simulated neurons. Even a fly's brain is ad space now.`;
+  const line = v ? `I made a real fruit fly brain think about ${brand} (138,639 simulated brain cells). ${MOOD_TEXT[v.kind]} ${v.neurons.toLocaleString('en-US')} of them lit up. Even a fly's brain is ad space now.` : `I just made a real fruit fly brain think about ${brand}, 138,639 simulated brain cells. Even a fly's brain is ad space now.`;
   $('shareX').href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(line + ' Try yours: BrandTheFly by @fulutmd') + '&url=' + encodeURIComponent(CONFIG.pageUrl);
 }
 renderVerdicts(); updateMsg(); updateShare();
@@ -1116,15 +1116,15 @@ function deriveClip(R) {
 }
 function chipsAt(F, k) {
   const c = [];
-  if (F.air[k]) c.push('Escape takeoff');
-  else if (F.back[k] > 0.25) c.push('Walking backward');
+  if (F.air[k]) c.push('Nope. Flying off');
+  else if (F.back[k] > 0.25) c.push('Backing away');
   else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) c.push('Turning left');
   else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) c.push('Turning right');
   else if (F.walk[k] > 0.25) c.push('Walking');
-  if (F.prob[k] > 0.3) c.push('Proboscis out');
-  if (F.pump[k] > 0.3) c.push('Swallowing');
-  if (Math.max(F.antL[k], F.antR[k]) > 0.3) c.push('Antennae twitch');
-  if (Math.abs(F.yaw[k]) > 0.08) c.push('Head turn');
+  if (F.prob[k] > 0.3) c.push('Tongue out');
+  if (F.pump[k] > 0.3) c.push('Gulping');
+  if (Math.max(F.antL[k], F.antR[k]) > 0.3) c.push('Antennae twitching');
+  if (Math.abs(F.yaw[k]) > 0.08) c.push('Looking at it');
   return c;
 }
 async function recordClip(R, fly) {
@@ -1153,10 +1153,10 @@ async function recordClip(R, fly) {
     cx.fillStyle = '#D2402F'; cx.beginPath(); cx.arc(28, 34, 5, 0, 6.28); cx.fill();
     cx.fillStyle = '#F2F4F8'; cx.font = `900 30px ${disp}`; cx.textBaseline = 'middle'; cx.fillText('BRANDTHE', 42, 35);
     const bw = cx.measureText('BRANDTHE').width; cx.fillStyle = '#62E2FF'; cx.fillText('FLY', 42 + bw + 6, 35);
-    cx.fillStyle = '#8990A0'; cx.font = `400 12px ${mono}`; cx.textAlign = 'right'; cx.fillText(`t = ${(last * 0.1).toFixed(0)} ms · real fly brain simulation`, CW - 20, 35); cx.textAlign = 'left';
+    cx.fillStyle = '#8990A0'; cx.font = `400 12px ${mono}`; cx.textAlign = 'right'; cx.fillText(`t = ${(last * 0.1).toFixed(0)} ms · simulated fly brain · 138,639 brain cells`, CW - 20, 35); cx.textAlign = 'left';
     // brain panel
     cx.drawImage(bv.canvas, 0, 64, CW, 360);
-    cx.fillStyle = '#8990A0'; cx.font = `400 11px ${mono}`; cx.fillText('1 · YOUR BRAND, BURNED INTO 138,639 NEURONS', 18, 82);
+    cx.fillStyle = '#8990A0'; cx.font = `400 11px ${mono}`; cx.fillText(`1 · ${label} INSIDE A REAL FLY BRAIN · EVERY BLUE DOT IS ONE BRAIN CELL`, 18, 82);
     // fly panel
     const fy0 = 424, fh = 232, k = Math.min(fly.n, Math.floor(step / 10)), F = fly.F;
     cx.save(); cx.beginPath(); cx.rect(0, fy0, CW, fh); cx.clip();
@@ -1170,25 +1170,37 @@ async function recordClip(R, fly) {
     cx.save(); cx.translate(ccx + st.z * ppm * 0.9, ccy + st.z * ppm * 1.2); cx.rotate(st.h); cx.fillStyle = `rgba(0,0,0,${0.45 - 0.2 * st.z})`; cx.beginPath(); cx.ellipse(0, 0, ppm * 0.55, ppm * 1.35, 0, 0, 7); cx.fill(); cx.restore();
     drawFly(cx, ccx, ccy, ppm * (1 + 0.28 * st.z), st);
     cx.restore();
-    cx.fillStyle = '#FF8A3D'; cx.font = `900 22px ${disp}`; cx.textBaseline = 'top'; cx.fillText("2 · THE FLY'S REACTION", 18, fy0 + 14);
+    cx.fillStyle = '#FF8A3D'; cx.font = `900 22px ${disp}`; cx.textBaseline = 'top'; cx.fillText('2 · WHAT THE FLY DOES', 18, fy0 + 14);
     // fly mood (fun labels, real neurons)
     { const s0 = Math.min(R.steps - 1, Math.floor(step)), md = fly.mood(s0);
       const bx = CW - 262, by = fy0 + 12, bwid = 246;
       cx.fillStyle = 'rgba(5,6,10,.84)'; cx.fillRect(bx, by, bwid, 122); cx.strokeStyle = '#2A3244'; cx.lineWidth = 1; cx.strokeRect(bx + .5, by + .5, bwid - 1, 121);
-      cx.fillStyle = '#8990A0'; cx.font = `500 10px ${mono}`; cx.textBaseline = 'top'; cx.fillText('FLY MOOD', bx + 10, by + 9);
+      cx.fillStyle = '#8990A0'; cx.font = `500 10px ${mono}`; cx.textBaseline = 'top'; cx.fillText('THE VERDICT', bx + 10, by + 9);
       const bar = (y, name, val, txt, color) => { cx.fillStyle = '#C9CEDA'; cx.font = `400 10px ${mono}`; cx.fillText(name, bx + 10, y); cx.textAlign = 'right'; cx.fillText(txt, bx + bwid - 10, y); cx.textAlign = 'left';
         cx.fillStyle = '#1B2130'; cx.fillRect(bx + 10, y + 14, bwid - 20, 6); cx.fillStyle = color; cx.fillRect(bx + 10, y + 14, (bwid - 20) * Math.min(1, val / 100), 6); };
-      bar(by + 26, 'APPETITE · VS SUGAR', md.appetite, `${Math.round(md.appetite)}%`, '#62E2FF');
-      bar(by + 50, 'CURIOSITY · ANTENNAE', md.curiosity, `${Math.round(md.curiosity)}%`, '#FF8A3D');
-      bar(by + 74, 'BRAIN BUZZ', md.buzz * 4, `${md.neurons.toLocaleString('en-US')} neurons`, '#F2F4F8');
+      bar(by + 26, 'HUNGRY? VS REAL SUGAR', md.appetite, `${Math.round(md.appetite)}%`, '#62E2FF');
+      bar(by + 50, 'CURIOUS?', md.curiosity, `${Math.round(md.curiosity)}%`, '#FF8A3D');
+      bar(by + 74, 'BRAIN CELLS LIT UP', md.buzz * 4, `${md.neurons.toLocaleString('en-US')}`, '#F2F4F8');
       cx.fillStyle = md.kind === 'taste' ? '#62E2FF' : md.kind === 'noticed' ? '#F2F4F8' : '#FF8A3D'; cx.font = `900 16px ${disp}`;
-      cx.fillText(s0 < 400 ? 'FLY IS THINKING…' : MOOD_TEXT[md.kind].toUpperCase(), bx + 10, by + 102); }
+      cx.fillText(s0 < 400 ? 'THINKING…' : MOOD_TEXT[md.kind].toUpperCase(), bx + 10, by + 102); }
     let chx = 18; const chy = fy0 + 46; cx.font = `500 11px ${mono}`;
     for (const c of chipsAt(F, k)) { const t = c.toUpperCase(), w = cx.measureText(t).width + 16; cx.fillStyle = 'rgba(255,138,61,.16)'; cx.fillRect(chx, chy, w, 24); cx.strokeStyle = 'rgba(255,138,61,.55)'; cx.lineWidth = 1; cx.strokeRect(chx + .5, chy + .5, w - 1, 23); cx.fillStyle = '#FFC29A'; cx.fillText(t, chx + 8, chy + 7); chx += w + 6; if (chx > 330) { break; } }
     // footer
     cx.textBaseline = 'middle'; cx.fillStyle = '#F2F4F8'; cx.font = `900 26px ${disp}`;
     cx.fillText(`${label} INSIDE A FLY'S BRAIN`.slice(0, 44), 18, CH - 32);
     cx.fillStyle = '#586072'; cx.font = `400 10px ${mono}`; cx.textAlign = 'right'; cx.fillText('try yours: BrandTheFly by @fulutmd', CW - 18, CH - 32); cx.textAlign = 'left';
+    // opening card: say what is happening before the dots start
+    const tSec = step / R.steps * SECS;
+    if (tSec < 2.6) {
+      const shown = pvMode === 'text' ? label : 'THIS LOGO';
+      cx.save(); cx.globalAlpha = Math.min(1, (2.6 - tSec) / 0.5); cx.fillStyle = 'rgba(5,6,10,.9)'; cx.fillRect(0, 0, CW, CH);
+      cx.textAlign = 'center'; cx.textBaseline = 'middle';
+      cx.fillStyle = '#8990A0'; cx.font = `500 16px ${mono}`; cx.fillText(pvMode === 'text' ? "WE SHOWED A FLY'S BRAIN THE WORD" : "WE SHOWED A FLY'S BRAIN", CW / 2, CH / 2 - 74);
+      cx.fillStyle = '#62E2FF'; cx.font = `900 ${shown.length > 10 ? 60 : 92}px ${disp}`; cx.fillText(shown, CW / 2, CH / 2 + 2);
+      cx.fillStyle = '#F2F4F8'; cx.font = `400 15px ${mono}`; cx.fillText('138,639 REAL BRAIN CELLS, SIMULATED. NO ACTUAL FLY.', CW / 2, CH / 2 + 80);
+      cx.fillStyle = '#8990A0'; cx.font = `400 13px ${mono}`; cx.fillText('WATCH WHAT THE FLY DOES', CW / 2, CH / 2 + 108);
+      cx.restore(); cx.textAlign = 'left';
+    }
   };
   const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
   const mime = window.MediaRecorder ? types.find(t => MediaRecorder.isTypeSupported(t)) : null;

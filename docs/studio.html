@@ -882,17 +882,17 @@ function updateReadout(step) {
   const chips = [];
   if (S) {
     const F = S.F;
-    if (F.air[k]) chips.push('Escape takeoff');
+    if (F.air[k]) chips.push('Nope. Flying off');
     else {
-      if (F.back[k] > 0.25) chips.push('Walking backward');
+      if (F.back[k] > 0.25) chips.push('Backing away');
       else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) chips.push('Turning left');
       else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) chips.push('Turning right');
       else if (F.walk[k] > 0.25) chips.push('Walking');
     }
-    if (F.prob[k] > 0.3) chips.push('Proboscis out');
-    if (F.pump[k] > 0.3) chips.push('Swallowing');
-    if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitch');
-    if (Math.abs(F.yaw[k]) > 0.08) chips.push('Head turn');
+    if (F.prob[k] > 0.3) chips.push('Tongue out');
+    if (F.pump[k] > 0.3) chips.push('Gulping');
+    if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitching');
+    if (Math.abs(F.yaw[k]) > 0.08) chips.push('Looking at it');
   }
   const html = chips.length ? chips.map(c => `<span class="chip">${c}</span>`).join('') : `<span class="chip calm">${simRunning ? 'Simulating brain…' : S ? 'Still' : 'Waiting for a stimulus'}</span>`;
   if (html !== lastChips) { $('chips').innerHTML = html; lastChips = html; }
