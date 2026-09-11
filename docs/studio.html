@@ -950,7 +950,7 @@ $('logoIn').addEventListener('change', async e => {
 for (const [id, key] of [['pSugar', 'sugar_GRN'], ['pLoom', 'loom']]) $(id).onclick = () => {
   preset = key; $('pSugar').setAttribute('aria-pressed', key === 'sugar_GRN'); $('pLoom').setAttribute('aria-pressed', key === 'loom'); rearm();
 };
-$('fireBtn').onclick = runSim;
+$('fireBtn').onclick = () => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'studio-fire', title: 'studio-fire', event: true }); } catch (e) {} runSim(); };
 const setStyle = t => { ticker = t; $('styleTicker').setAttribute('aria-pressed', t); $('styleStill').setAttribute('aria-pressed', !t); $('textIn').maxLength = t ? 24 : 10; if (!t && $('textIn').value.length > 10) $('textIn').value = $('textIn').value.slice(0, 10); rearm(); };
 $('styleTicker').onclick = () => setStyle(true);
 $('styleStill').onclick = () => setStyle(false);
@@ -987,6 +987,7 @@ requestAnimationFrame(tick);
 })();
 })();
 </script>
+<script data-goatcounter="https://flux.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 </body>
 </html>

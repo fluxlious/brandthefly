@@ -103,3 +103,5 @@ It prints the fly-mood numbers for the run; paste them into `CONFIG.verdicts` in
 ## License and attribution
 
 Code (the site and the pipeline) is MIT, see `LICENSE`. The data files in `docs/` are derived from the [FlyWire](https://flywire.ai) connectome (CC BY 4.0; Dorkenwald et al. 2024, Schlegel et al. 2024). The neuron model follows [Shiu et al. 2024](https://github.com/philshiu/Drosophila_brain_model) (MIT). If you reuse the data files, keep that attribution.
+
+The site counts visits anonymously with [GoatCounter](https://www.goatcounter.com) (no cookies, no personal data). Logos and brand names never leave the visitor's browser.

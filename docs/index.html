@@ -301,7 +301,7 @@ footer a{color:var(--dim)}
           <input class="input big" id="heroBrand" maxlength="24" placeholder="YOUR BRAND" autocomplete="off" spellcheck="false">
           <button class="btn primary" type="submit">Burn it in</button>
         </form>
-        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · your logo never leaves your browser. <b>Soon:</b> rent minutes in its mind, <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a>.</p>
+        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · your logo never leaves your browser · anonymous visit counts only. <b>Soon:</b> rent minutes in its mind, <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a>.</p>
       </div>
       <figure class="brainbadge">
         <canvas id="h1fx" aria-label="BRANDTHEFLY sliding through a simulated fly brain"></canvas>
@@ -446,6 +446,7 @@ const CONFIG = {
 /* ======================== */
 
 const $ = id => document.getElementById(id);
+const track = name => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title: name, event: true }); } catch (e) {} };
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const N = 138639;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -904,6 +905,8 @@ function updateShare() {
   $('shareX').href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(line + ' Try yours: BrandTheFly by @fulutmd') + '&url=' + encodeURIComponent(CONFIG.pageUrl);
 }
 renderVerdicts(); updateMsg(); updateShare();
+$('shareX').addEventListener('click', () => track('share-x'));
+$('copyMsg').addEventListener('click', () => track('copy-dm'));
 
 /* ---------- brand piece: a small live brain glowing behind the word "neurons." ---------- */
 function brainBehindWord(rep) {
@@ -1212,6 +1215,7 @@ async function makeClip() {
   if (!hero) { $('clipOut').hidden = false; $('clipResult').hidden = true; clipStatus('Still loading the brain… try again in a moment.', 0.02); return; }
   if (pvMode === 'text' && !$('brandIn').value.trim()) { clipStatus('Type your brand first.', 0); return; }
   CLIP.busy = true; $('makeClip').disabled = true; $('clipOut').hidden = false; $('clipResult').hidden = true;
+  track(pvMode === 'text' ? 'clip-start-text' : 'clip-start-logo');
   try {
     clipStatus('Loading the brain wiring…', 0.05);
     const wires = await loadWiring();
@@ -1225,6 +1229,7 @@ async function makeClip() {
     if (CLIP.url) URL.revokeObjectURL(CLIP.url);
     CLIP.blob = out.blob; CLIP.ext = out.ext; CLIP.url = URL.createObjectURL(out.blob);
     $('clipVideo').src = CLIP.url; $('clipResult').hidden = false;
+    track('clip-done');
     { const endS = Math.min(R.steps - 1, plan.off), md = fly.mood(endS);
       CLIP.lastVerdict = { ...md, brand: pvMode === 'text' ? $('brandIn').value.trim() : 'logo' };
       $('clipVerdict').textContent = `${MOOD_TEXT[md.kind]} · ${Math.round(md.appetite)}% as tasty as sugar · ${md.neurons.toLocaleString('en-US')} neurons lit`;
@@ -1286,6 +1291,7 @@ function heroContext() {
 })();
 })();
 </script>
+<script data-goatcounter="https://flux.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 </body>
 </html>
