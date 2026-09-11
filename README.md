@@ -30,6 +30,7 @@ brandthefly/
     ├── 06_hero_sim.py            simulates a sliding LED text through the brain
     ├── 07_pack_hero.py           packs that replay into docs/hero.json
     ├── 08_fly_mood_test.py       runs brands/shapes and prints appetite, curiosity, dopamine
+    ├── 09_hero_sim_web.mjs       re-simulates the hero replay from docs/*.json alone (no raw download)
     ├── simlib.py                 the brain model (leaky integrate-and-fire, Shiu et al. parameters)
     ├── font57.json / .txt        5×7 LED dot-matrix font
     └── extras/name_snapshot/     the very first "CEM" brain snapshot + GIF
@@ -75,10 +76,18 @@ python 08_fly_mood_test.py "CEM,PIZZA,sugar"
 ```
 Steps 01–05 reproduce the site's data files byte for byte.
 
+To change only the hero replay (the text, or where the LED band sits) you don't need the raw data:
+
+```bash
+cd pipeline
+node 09_hero_sim_web.mjs "BRAND THE FLY" 243   # text, band centre in µm -> ../docs/hero.json, ~40 s
+```
+It prints the fly-mood numbers for the run; paste them into `CONFIG.verdicts` in `docs/index.html`.
+
 ## How it works (and what's real)
 
 - **Real:** the wiring (FlyWire connectome, connections with 3+ synapses kept for the web, 4.9M of 15.1M; checked against the full network), the neuron model and parameters from Shiu et al. 2024, and every neuron's position.
-- **Stimulus:** neurons under your logo or LED dots get 300 Hz input while it passes over them. What else fires comes from the wiring.
+- **Stimulus:** neurons under your logo or LED dots get 300 Hz input while it passes over them. The fly's output neurons (1,299 descending neurons and the motor neurons) are never driven directly, so what the fly does has to come through the wiring.
 - **The fly:** a 2D animation driven by output neurons: DNa01/DNa02 steering, MDN backward walking, giant fiber takeoff, MN9 proboscis, pharynx, antenna and neck motor neurons.
 - **Fly moods:** playful names for real activity. Appetite = MN9 compared with a real sugar taste in the same model (146 Hz). Curiosity = antenna motor neurons. Buzz = neurons that fired. Dopamine critic = reward (PAM) vs punishment (PPL1) neurons.
 - **Not real:** no animal is involved, and the fly has no actual opinion about brands.

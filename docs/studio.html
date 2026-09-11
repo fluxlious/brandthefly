@@ -239,6 +239,7 @@ details a{color:var(--stim)}
           <li><b>LED ticker:</b> a 5×7 dot-matrix text slides across the brain. Neurons under a lit dot get 300 Hz input while the dot passes over them.</li>
           <li><b>Picture:</b> every dot sits at its neuron's real position, seen from the front.</li>
           <li><b>Fly:</b> an animation driven by output neurons, not a physics body. Steering neurons (DNa01, DNa02) set walking and turning, MDN walks it backward, giant fiber spikes launch a takeoff, and proboscis and pharynx motor neurons drive feeding.</li>
+          <li><b>Outputs are never poked directly:</b> the panel skips the fly's 1,299 descending neurons and its motor neurons, so everything the fly does comes through the wiring.</li>
           <li><b>The logo shape comes from you.</b> What the wiring does with it comes from the brain.</li>
         </ul>
         <ul>
@@ -390,7 +391,7 @@ function selectFromMask(mask, mw, mh) {
   const CELL = 4, gw = Math.ceil(mw / CELL) + 1, taken = new Uint8Array(gw * (Math.ceil(mh / CELL) + 1));
   const out = [];
   for (let k = 0; k < N; k++) {
-    const i = ORDER[k]; if (!D.OK[i]) continue;
+    const i = ORDER[k]; if (!D.OK[i] || SKIP[i]) continue;
     const mx = Math.floor(D.X[i] - D.xmin), my = Math.floor(D.Y[i] - D.ymin);
     if (mx < 0 || my < 0 || mx >= mw || my >= mh || !mask[my * mw + mx]) continue;
     const c = Math.floor(my / CELL) * gw + Math.floor(mx / CELL);
@@ -553,6 +554,7 @@ function planTicker(raw) {
     for (let r = 0; r < 7; r++) { const yr = y + (r - 3) * PITCH; for (let gy = Math.floor((yr - RAD - D.ymin) / CELL); gy <= Math.floor((yr + RAD - D.ymin) / CELL); gy++) if (gy >= 0 && gy < GH) sc += rowOcc[gy]; }
     if (sc > bestScore) { bestScore = sc; yc = y; }
   }
+  yc -= 10; // the densest band sits low in the picture; lift the text so it reads centred in the brain
   const textW = cols.length * PITCH, brainW = D.xmax - D.xmin;
   const x0 = D.xmax + RAD + 4;
   const dist = brainW + textW + 2 * RAD + 8;
@@ -563,7 +565,7 @@ function planTicker(raw) {
   const taken = new Uint8Array(GW * GH);
   const iN = [], iS = [], iE = [];
   for (let k = 0; k < N; k++) {
-    const i = ORDER[k]; if (!D.OK[i]) continue;
+    const i = ORDER[k]; if (!D.OK[i] || SKIP[i]) continue;
     const y = D.Y[i], r = Math.round((y - yc) / PITCH) + 3; if (r < 0 || r > 6) continue;
     const dy = y - (yc + (r - 3) * PITCH); if (Math.abs(dy) > RAD) continue;
     const cell = Math.min(GH - 1, Math.floor((y - D.ymin) / CELL)) * GW + Math.min(GW - 1, Math.floor((D.X[i] - D.xmin) / CELL));
@@ -677,11 +679,14 @@ function finishSim() {
 
 /* ---------------- outputs → behavior ---------------- */
 const GK = ['DNa01_L', 'DNa01_R', 'DNa02_L', 'DNa02_R', 'MDN_L', 'MDN_R', 'GF_L', 'GF_R', 'MN9', 'proboscis_MN', 'ingest_MN', 'antenna_MN_L', 'antenna_MN_R', 'neck_MN_L', 'neck_MN_R'];
-let GBITS, DNMASK;
+let GBITS, DNMASK, SKIP;
 function buildGroups() {
   GBITS = new Uint16Array(N);
   GK.forEach((k, b) => { for (const i of D.groups[k]) GBITS[i] |= (1 << b); });
   DNMASK = new Uint8Array(N); for (const i of D.groups.DN_all) DNMASK[i] = 1;
+  // Output neurons (descending + motor) are never targeted directly; the fly's reaction has to come through the wiring.
+  SKIP = new Uint8Array(N);
+  for (const k of ['DN_all', ...GK]) for (const i of D.groups[k]) SKIP[i] = 1;
 }
 function derive() {
   const cum = GK.map(() => new Uint32Array(STEPS + 1));

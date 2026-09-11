@@ -387,7 +387,7 @@ footer a{color:var(--dim)}
     <div class="eyebrow">FAQ</div>
     <h2>Questions</h2>
     <div class="faq">
-      <details><summary>Is this a real fly?</summary><p><b>Real:</b> the brain wiring (the FlyWire connectome, all 138,639 neurons), the neuron model from Shiu et al. 2024, and every neuron's position. Which neurons join in and what the brain tells the body comes from the wiring, not a script.</p><p><b>Not real:</b> no animal sees your logo; it's a computer simulation. The fly's body is animated from its output neurons, and the mood labels are playful names for real neuron activity.</p></details>
+      <details><summary>Is this a real fly?</summary><p><b>Real:</b> the brain wiring (the FlyWire connectome, all 138,639 neurons), the neuron model from Shiu et al. 2024, and every neuron's position. Which neurons join in and what the brain tells the body comes from the wiring, not a script. Your logo never drives the fly's output neurons directly (its descending and motor neurons are skipped), so what the fly does has to come through the wiring.</p><p><b>Not real:</b> no animal sees your logo; it's a computer simulation. The fly's body is animated from its output neurons, and the mood labels are playful names for real neuron activity.</p></details>
       <details><summary>Can I choose what the fly does?</summary><p>No, and that's the fun part. Your logo lights up a different set of neurons than anyone else's, so the wiring gives every brand its own reaction. Some flies turn, some reach for food, some try to escape.</p></details>
       <details><summary>What do I get?</summary><p>A square clip of your logo firing through the brain with the fly reacting next to it, plus its dopamine verdict. Post it wherever you like.</p></details>
       <details><summary>Can my brand make the fly hungry?</summary><p>Maybe. Appetite measures the fly's proboscis motor neuron (MN9, the one that sticks its tongue out) against a real sugar taste in the same model. Results differ by brand and a little from run to run. Its dopamine reward neurons are a tougher crowd: they have stayed quiet for every brand so far.</p></details>
@@ -413,8 +413,8 @@ const CONFIG = {
   // Fly moods from real simulation runs (add new ones from the clip maker results)
   verdicts: [
     // neurons = neurons that fired; appetite = MN9 Hz; curiosity = antenna motor neurons Hz; reward/punishment = dopamine Hz
-    { brand: 'BRAND THE FLY', neurons: 20692, appetite: 19.4, curiosity: 9.2, reward: 3.1, punishment: 109.8, note: 'example run' },
-    { brand: 'CEM', neurons: 21136, appetite: 20.6, curiosity: 6.8, reward: 2.6, punishment: 94.2, note: 'the founder' }
+    { brand: 'BRAND THE FLY', neurons: 22114, appetite: 0.0, curiosity: 5.7, reward: 3.2, punishment: 113.5, note: 'the hero replay' },
+    { brand: 'CEM', neurons: 22980, appetite: 0.0, curiosity: 8.0, reward: 2.6, punishment: 96.6, note: 'the founder' }
   ]
 };
 /* ======================== */
@@ -438,7 +438,7 @@ const MOOD_TEXT = { taste: 'The fly wants a taste', intrigued: 'The fly is intri
   const top = CONFIG.verdicts.slice().sort((a, b) => moodOf(b).appetite - moodOf(a).appetite)[0];
   const items = [
     '<strong>138,639</strong> neurons', top ? `Tastiest so far: ${top.brand} <em>${Math.round(moodOf(top).appetite)}% as tasty as sugar</em>` : '',
-    'Fly turned <em>hard left</em>', 'Antennae <em>twitching</em>', 'Proboscis <em>out</em>', '<strong>15,844</strong> neurons joined in', 'Made by <strong>@fulutmd</strong>'
+    'Fly turned <em>hard left</em>', 'Antennae <em>twitching</em>', 'Head <em>turning</em>', '<strong>16,019</strong> neurons joined in', 'Made by <strong>@fulutmd</strong>'
   ];
   const html = items.filter(Boolean).map(t => `<span>${t}</span>`).join('');
   $('tape').innerHTML = html + html;
@@ -446,6 +446,9 @@ const MOOD_TEXT = { taste: 'The fly wants a taste', intrigued: 'The fly is intri
 
 /* ---------- brain geometry ---------- */
 let X, Y, OK, xmin, xmax, ymin, ymax, BW, BH, PIX, BASE;
+// Output neurons (descending + motor) are never driven by the panel directly; the fly's reaction has to come through the wiring.
+const OUTPUT_GROUPS = ['DN_all', 'DNa01_L', 'DNa01_R', 'DNa02_L', 'DNa02_R', 'MDN_L', 'MDN_R', 'GF_L', 'GF_R', 'MN9', 'proboscis_MN', 'ingest_MN', 'antenna_MN_L', 'antenna_MN_R', 'neck_MN_L', 'neck_MN_R'];
+let SKIP = new Uint8Array(N);
 const SC = 1.3, PAD = 16;
 function setupGeometry(pos) {
   X = new Float32Array(N); Y = new Float32Array(N); OK = new Uint8Array(N);
@@ -672,7 +675,7 @@ function buildCandidates(yc) {
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = order[i]; order[i] = order[j]; order[j] = t; }
   for (const i of order) {
-    if (!OK[i]) continue;
+    if (!OK[i] || SKIP[i]) continue;
     const r = Math.round((Y[i] - yc) / PITCH) + 3; if (r < 0 || r > 6) continue;
     const dy = Y[i] - (yc + (r - 3) * PITCH); if (Math.abs(dy) > RAD) continue;
     const key = Math.floor((Y[i] - ymin) / 4) * 4096 + Math.floor((X[i] - xmin) / 4);
@@ -722,7 +725,7 @@ let logoCand = null;
 function buildLogoCandidates(yc, half) {
   const taken = new Set(), out = [];
   for (let i = 0; i < N; i++) {
-    if (!OK[i] || Math.abs(Y[i] - yc) > half) continue;
+    if (!OK[i] || SKIP[i] || Math.abs(Y[i] - yc) > half) continue;
     const key = Math.floor((Y[i] - ymin) / 4) * 4096 + Math.floor((X[i] - xmin) / 4);
     if (taken.has(key)) continue; taken.add(key); out.push(i);
   }
@@ -905,7 +908,7 @@ const clipStatus = (msg, frac) => { $('clipMsg').textContent = msg; $('clipBar')
 const unb64 = o => { const b = atob(o.b64), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; };
 async function loadWiring() {
   if (CLIP.wires) return CLIP.wires;
-  const files = ['counts.json', 'idx.json', 'w8.json', 'wover.json', 'groups.json'];
+  const files = ['counts.json', 'idx.json', 'w8.json', 'wover.json'];
   let done = 0;
   const got = await Promise.all(files.map(f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' returned ' + r.status); return r.json(); })
     .then(x => { done++; clipStatus('Loading the brain wiring…', 0.1 + 0.2 * done / files.length); return x; })));
@@ -924,7 +927,6 @@ async function loadWiring() {
   }
   const w8 = new Int8Array(unb64(got[2])), wo = new Int16Array(unb64(got[3])), W = new Float32Array(E);
   for (let j = 0, k = 0; j < E; j++) { let v = w8[j]; if (v === -128) v = wo[k++]; W[j] = v * 0.275; }
-  CLIP.groups = got[4];
   CLIP.wires = { rowptr, idx, W };
   return CLIP.wires;
 }
@@ -1204,7 +1206,9 @@ $('heroLogo').addEventListener('click', () => $('pvLogo').click());
 /* ---------- boot ---------- */
 (async () => {
   try {
-    const [pos, h] = await Promise.all([fetch('pos.json').then(r => r.json()), fetch('hero.json').then(r => r.json())]);
+    const [pos, h, groups] = await Promise.all([fetch('pos.json').then(r => r.json()), fetch('hero.json').then(r => r.json()), fetch('groups.json').then(r => r.json())]);
+    CLIP.groups = groups;
+    for (const k of OUTPUT_GROUPS) for (const i of groups[k]) SKIP[i] = 1;
     const b = atob(pos.b64), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
     setupGeometry(new Uint16Array(u.buffer));
     buildCandidates(h.meta.yc);
