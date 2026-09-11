@@ -13,7 +13,8 @@ brandthefly/
 ├── docs/                         the website (GitHub Pages serves this folder)
 │   ├── index.html                landing page: hero replay, fly moods, clip maker
 │   ├── studio.html               Fly Brain Billboard: full studio (text/logo/senses, LED ticker, readouts, 9:16 clip frame)
-│   ├── hero.json                 pre-simulated "BRAND THE FLY" replay + output neuron rates
+│   ├── hero.json                 pre-simulated "NIKE" replay + output neuron rates (the big panel)
+│   ├── badge.json                pre-simulated "BRANDTHEFLY" replay (the small brain at the top)
 │   ├── counts.json idx.json      brain wiring (4.9M connections, compressed)
 │   ├── w8.json wover.json        connection weights
 │   ├── pos.json                  neuron positions (front view)
@@ -80,7 +81,8 @@ To change only the hero replay (the text, or where the LED band sits) you don't 
 
 ```bash
 cd pipeline
-node 09_hero_sim_web.mjs "BRAND THE FLY" 243   # text, band centre in µm -> ../docs/hero.json, ~40 s
+node 09_hero_sim_web.mjs "NIKE" 243                          # big replay -> ../docs/hero.json, ~40 s
+node 09_hero_sim_web.mjs "BRANDTHEFLY" 243 ../docs/badge.json  # small brain at the top
 ```
 It prints the fly-mood numbers for the run; paste them into `CONFIG.verdicts` in `docs/index.html`.
 

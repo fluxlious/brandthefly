@@ -67,46 +67,55 @@ nav.top .btn{padding:10px 14px;font-size:16px}
 @media (max-width:760px){nav.top .links{display:none} nav.top .btn{margin-left:auto}}
 
 /* hero */
-.hero{padding-block:20px 0;display:grid;gap:18px}
-.hero-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px 40px;align-items:end}
-@media (max-width:900px){.hero-head{grid-template-columns:1fr}.hero-side .brainbadge{order:3}.hero-side .lede{order:1}.hero-side .heroform{order:2}.hero-side .note{order:2}.hero-side .teaser{order:4}}
-.hero h1{margin:10px 0 0;font:900 clamp(44px,6.8vw,98px)/.86 var(--display);text-transform:uppercase;letter-spacing:.002em;text-wrap:balance}
+.hero{padding-block:14px 0;display:grid;gap:14px}
+.hero-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,360px);gap:20px 48px;align-items:center;padding-bottom:4px}
+.hero-copy{display:flex;flex-direction:column;gap:14px}
+.hero-copy .lede{font-size:17px;max-width:60ch}
+.hero-copy .note{margin:0;font:400 12.5px/1.55 var(--mono);color:var(--dim)}
+.hero-copy .note a{color:var(--logo)}
+.hero-copy .note b{color:var(--react);font-weight:700}
+@media (max-width:900px){.hero-top{grid-template-columns:1fr}.brainbadge{max-width:460px}}
+.hero h1{margin:0;font:900 clamp(38px,5.2vw,72px)/.9 var(--display);text-transform:uppercase;letter-spacing:.002em;text-wrap:balance;max-width:15ch}
 .hero h1 .c{color:var(--logo)}
 .h1wrap{position:relative}
 #h1fx{display:block;width:100%;height:auto;opacity:0;transition:opacity .8s;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%)}
-.brainbadge{margin:0;display:flex;flex-direction:column;gap:6px;max-width:380px}
-.brainbadge figcaption{font:500 11px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+.brainbadge{margin:0;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--deck)}
+.brainbadge figcaption{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;align-items:center;font:700 13px/1.3 var(--ui);color:var(--ink)}
+.brainbadge figcaption small{grid-column:2;font:400 10.5px/1.4 var(--mono);color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
 .brainbadge figcaption i{width:7px;height:7px;border-radius:50%;background:var(--react);box-shadow:0 0 8px var(--react)}
 #h1fx.on{opacity:1}
 .hero h1{position:relative;z-index:1}
 
 .hero h1 .a{color:var(--react)}
-.hero-side{display:flex;flex-direction:column;gap:18px;padding-bottom:8px}
-.hero-side .cta{display:flex;flex-wrap:wrap;gap:10px}
 .heroform{display:flex;gap:8px;flex-wrap:wrap}
 .heroform .input{flex:1 1 220px;min-width:0}
 .heroform .btn{flex:0 0 auto}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.hero-side .note a{color:var(--logo)}
-.teaser{margin:0;padding:10px 12px;border:1px dashed var(--line-2);border-radius:4px;font-size:14px;color:var(--dim)}
-.teaser b{color:var(--react);font-weight:700}
-.teaser a{color:var(--ink)}
 .scope{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#04050A}
 .scope canvas{display:block;width:100%;height:auto}
 .hud{position:absolute;font:400 10.5px/1.35 var(--mono);color:var(--dim);letter-spacing:.05em;pointer-events:none}
-.hud.tl{left:16px;top:14px;right:104px;text-transform:uppercase}
+.hud.tl{left:16px;top:14px;right:104px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
 .hud.tl .live{color:var(--eye);margin-right:8px}
 .hud.tr{right:16px;top:14px;color:var(--ink);font-size:13px}
 .hud.bl{left:16px;bottom:14px;display:flex;gap:16px;flex-wrap:wrap}
 .hud.br{right:16px;bottom:14px;text-align:right}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .dot.c{background:var(--logo);box-shadow:0 0 8px var(--logo)}.dot.a{background:var(--react);box-shadow:0 0 8px var(--react)}
-.show{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);grid-template-rows:auto auto;gap:10px;align-items:stretch}
-.show .hero-scope{grid-row:1 / span 2}
-.mood{border:1px solid var(--line);border-radius:8px;background:var(--deck);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.show{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);grid-template-rows:auto auto;gap:10px;align-items:stretch}
+.step{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#05060A;font:900 12px/1 var(--display);margin-right:8px;vertical-align:-3px;flex:none}
+.show .hero-scope{grid-row:1 / span 2;display:flex;align-items:center}
+.show .hero-scope canvas{width:100%}
+@media (max-width:600px){.hud.tl .live{display:none}.hud.tl{font-size:11px;right:128px}}
+.mood{border:1px solid var(--line);border-radius:8px;background:var(--deck);padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.brandname{color:var(--logo)}
+.mbar{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:4px 10px}
+.mbar>span{font:500 13px/1.3 var(--ui);color:var(--ink)}
+.mbar>span small{display:block;font:400 11px/1.3 var(--mono);color:var(--faint)}
+.mbar>b{font:900 22px/1 var(--display);color:var(--ink);letter-spacing:.01em}
+.mbar>i{grid-column:1/-1;display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.mbar>i span{display:block;height:100%;transition:width .25s}
 .mood-head{display:flex;flex-direction:column;gap:3px}
 .mood-head b{font:900 clamp(17px,1.6vw,21px)/1.05 var(--display);letter-spacing:.03em;text-transform:uppercase}
-.mood-head b span{color:var(--logo)}
 .mood-head small{font:400 11px/1.35 var(--mono);color:var(--dim)}
 .mood-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:2px}
 .mood .critic{font:400 10.5px/1.4 var(--mono);color:var(--faint)}
@@ -282,42 +291,42 @@ footer a{color:var(--dim)}
   </nav>
 
   <header class="hero">
-    <div class="hero-head">
-      <div>
+    <div class="hero-top">
+      <div class="hero-copy">
         <div class="eyebrow">Even a fly's brain is ad space now · an experiment by @fulutmd</div>
-        <div class="h1wrap"><h1 id="h1">Make a <span class="a">fly</span> think about <span class="c">your brand</span></h1></div>
-      </div>
-      <div class="hero-side">
-        <figure class="brainbadge"><canvas id="h1fx" aria-label="A fruit fly brain, neurons firing"></canvas><figcaption><i></i>Live · 138,639 neurons firing</figcaption></figure>
-        <p class="lede">Everybody wants their brand everywhere. So here is the smallest billboard on Earth: a real fruit fly brain, all 138,639 neurons simulated. Type a brand, it gets written into the neurons as points of light, the wiring spreads it, the fly does what its brain says, and you get an 11-second clip. Want it in there all day? That is the next experiment, further down.</p>
+        <h1 id="h1">Make a <span class="a">fly</span> think about <span class="c">your brand</span></h1>
+        <p class="lede">The smallest billboard on Earth: a real fruit fly brain, all 138,639 neurons simulated. Your brand is written into it as light, the wiring spreads it, the fly does what its brain says, and you get an 11-second clip.</p>
         <form class="heroform" id="heroForm">
           <label class="sr" for="heroBrand">Your brand</label>
           <input class="input big" id="heroBrand" maxlength="24" placeholder="YOUR BRAND" autocomplete="off" spellcheck="false">
           <button class="btn primary" type="submit">Burn it in</button>
         </form>
-        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · runs in your browser, nothing is uploaded</p>
-        <p class="teaser"><b>Soon:</b> rent minutes in its mind. <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a> to get in early.</p>
+        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · nothing leaves your browser. <b>Soon:</b> rent minutes in its mind, <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a>.</p>
       </div>
+      <figure class="brainbadge">
+        <canvas id="h1fx" aria-label="BRANDTHEFLY sliding through a simulated fly brain"></canvas>
+        <figcaption><i></i><span>Our own brand, in its head right now</span><small id="badgeCap">BRANDTHEFLY · live · 138,639 neurons</small></figcaption>
+      </figure>
     </div>
 
     <div class="show">
     <div class="scope hero-scope">
-      <canvas id="hero" width="1101" height="551" aria-label="Replay: BRAND THE FLY sliding through a simulated fly brain"></canvas>
-      <div class="hud tl"><span class="live">● Replay</span><span id="heroCap">1 · Your brand, written into the brain</span></div>
+      <canvas id="hero" width="1101" height="551" aria-label="Replay: NIKE sliding through a simulated fly brain"></canvas>
+      <div class="hud tl"><span class="live">● Replay</span><b class="step">1</b><span id="heroCap">Your brand, written into the brain</span></div>
       <div class="hud tr" id="heroT">loading brain…</div>
       <div class="hud bl"><span><i class="dot c"></i>real neurons firing your logo</span><span><i class="dot a"></i>the brain reacting</span></div>
       <div class="hud br">5× slow motion</div>
     </div>
     <div class="arena" id="arenaWrap">
       <canvas id="arena" aria-label="The fly reacting to its brain's output neurons"></canvas>
-      <div class="arena-head"><b id="arenaTitle">2 · The fly's reaction</b><span id="arenaSub">What its brain tells the body while your brand fires</span><div class="chips" id="chips"><span class="chip calm">Loading fly…</span></div></div>
+      <div class="arena-head"><b><span class="step">2</span><span id="arenaTitle">The fly's reaction</span></b><span id="arenaSub">What its brain tells the body while your brand fires</span><div class="chips" id="chips"><span class="chip calm">Loading fly…</span></div></div>
       <div class="hud tl2"><small>body animated from the brain's output neurons · 1 mm grid</small></div>
     </div>
     <div class="mood" id="moodPanel">
-      <div class="mood-head"><b>3 · How the fly feels about <span id="moodBrand">your brand</span></b><small>live, from its output neurons · same brain for every brand</small></div>
-      <div class="vbar"><span>Appetite · vs sugar</span><span id="mA">0%</span><i><span id="mAb" style="width:2%;background:#62E2FF"></span></i></div>
-      <div class="vbar"><span>Curiosity · antennae</span><span id="mC">0%</span><i><span id="mCb" style="width:2%;background:#FF8A3D"></span></i></div>
-      <div class="vbar"><span>Brain buzz</span><span id="mB">0 neurons</span><i><span id="mBb" style="width:2%;background:#F2F4F8"></span></i></div>
+      <div class="mood-head"><b><span class="step">3</span>How the fly feels about <span class="brandname" id="moodBrand">your brand</span></b><small>live, from its output neurons · same brain for every brand</small></div>
+      <div class="mbar"><span>Appetite <small>proboscis neuron vs a real sugar taste</small></span><b id="mA">0%</b><i><span id="mAb" style="width:2%;background:#62E2FF"></span></i></div>
+      <div class="mbar"><span>Curiosity <small>antenna motor neurons</small></span><b id="mC">0%</b><i><span id="mCb" style="width:2%;background:#FF8A3D"></span></i></div>
+      <div class="mbar"><span>Brain buzz <small>neurons that fired so far</small></span><b id="mB">0</b><i><span id="mBb" style="width:2%;background:#F2F4F8"></span></i></div>
       <div class="mood-foot"><span class="vpill noticed" id="moodPill">Fly is thinking…</span><span class="critic" id="moodCritic"></span></div>
     </div>
     </div>
@@ -537,9 +546,9 @@ function runHero() {
   let t0 = null, lastF = -1, lastCap = -1;
   const text = hero.meta.text || 'YOUR BRAND', onF = Math.round(hero.meta.on_ms / hero.meta.bin_ms), offF = Math.round(hero.meta.off_ms / hero.meta.bin_ms);
   const fmt = n => (n || 0).toLocaleString('en-US');
-  const caps = [`1 · Writing ${text} into the brain…`,
-    hero.meta.stim_neurons ? `1 · Writing ${text} into ${fmt(hero.meta.stim_neurons)} real neurons` : `1 · Writing ${text} into real neurons`,
-    hero.meta.recruited ? `1 · ${text} is in · the wiring lit ${fmt(hero.meta.recruited)} more neurons` : `1 · ${text} is in · the wiring takes over`];
+  const caps = [`Writing ${text} into the brain…`,
+    hero.meta.stim_neurons ? `Writing ${text} into ${fmt(hero.meta.stim_neurons)} real neurons` : `Writing ${text} into real neurons`,
+    hero.meta.recruited ? `${text} is in · the wiring lit ${fmt(hero.meta.recruited)} more neurons` : `${text} is in · the wiring takes over`];
 
   const step = ts => {
     if (t0 === null) t0 = ts;
@@ -669,7 +678,7 @@ function setMood(neurons, m) {
   if (key === moodKey) return; moodKey = key;
   $('mA').textContent = a + '%'; $('mAb').style.width = Math.max(2, a) + '%';
   $('mC').textContent = c + '%'; $('mCb').style.width = Math.max(2, c) + '%';
-  $('mB').textContent = neurons.toLocaleString('en-US') + ' neurons'; $('mBb').style.width = Math.max(2, Math.min(100, 400 * neurons / N)) + '%';
+  $('mB').textContent = neurons.toLocaleString('en-US'); $('mBb').style.width = Math.max(2, Math.min(100, 400 * neurons / N)) + '%';
   const pill = $('moodPill'); pill.textContent = m ? MOOD_TEXT[m.kind] : 'Fly is thinking…'; pill.className = 'vpill ' + (m ? m.kind : 'noticed');
 }
 function renderMood(f) {
@@ -897,7 +906,7 @@ function updateShare() {
 renderVerdicts(); updateMsg(); updateShare();
 
 /* ---------- brand piece: a small live brain glowing behind the word "neurons." ---------- */
-function brainBehindWord() {
+function brainBehindWord(rep) {
   const cv = $('h1fx'), word = $('nword'), wrap = cv.parentElement, ctx = cv.getContext('2d');
   let s2, W2, H2, pix, base, B, A, img, layer, lctx, dpr;
   const place = () => {
@@ -915,19 +924,20 @@ function brainBehindWord() {
     img = ctx.createImageData(W2, H2);
     layer = document.createElement('canvas'); layer.width = W2; layer.height = H2; lctx = layer.getContext('2d');
   };
+  if (rep.meta.text) $('badgeCap').textContent = `${rep.meta.text} · live · 138,639 neurons`;
   place();
   let t0 = null, lastF = -1;
   const SLOW = 3;
   const frame = ts => {
     if (t0 === null) t0 = ts;
-    let f = Math.floor(((ts - t0) / (hero.meta.bin_ms * SLOW)) % hero.F);
+    let f = Math.floor(((ts - t0) / (rep.meta.bin_ms * SLOW)) % rep.F);
     if (reduce) f = 900;
     if (f !== lastF) {
       if (f < lastF || lastF < 0) { A.fill(0); B.fill(0); lastF = f - 1; }
       for (let g = Math.max(lastF + 1, f - 4); g <= f; g++) {
         for (let i = 0; i < B.length; i++) { B[i] *= 0.6; A[i] *= 0.6; }
-        for (let k = hero.start[g]; k < hero.start[g + 1]; k++) {
-          const c = hero.codes[k], n = c < 0 ? -c - 1 : c, q = pix[n]; if (q < 0) continue;
+        for (let k = rep.start[g]; k < rep.start[g + 1]; k++) {
+          const c = rep.codes[k], n = c < 0 ? -c - 1 : c, q = pix[n]; if (q < 0) continue;
           if (c < 0) A[q] += 0.5; else B[q] += 1;
         }
       }
@@ -1254,7 +1264,7 @@ $('heroLogo').addEventListener('click', () => $('pvLogo').click());
 
 function heroContext() {
   const text = hero.meta.text || 'YOUR BRAND';
-  $('arenaTitle').textContent = `2 · The fly's reaction to ${text}`;
+  $('arenaTitle').textContent = `The fly's reaction to ${text}`;
   $('arenaSub').textContent = `What its brain tells the body while ${text} fires`;
   $('moodBrand').textContent = text;
   const v = CONFIG.verdicts.find(x => x.brand.toUpperCase() === text.toUpperCase());
@@ -1275,7 +1285,7 @@ function heroContext() {
     hero = decodeHero(h);
     heroContext();
     runHero();
-    try { brainBehindWord(); } catch (err) {}
+    fetch('badge.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(b => brainBehindWord(decodeHero(b))).catch(() => { try { brainBehindWord(hero); } catch (err) {} });
   } catch (e) {
     $('heroT').textContent = 'Replay unavailable. Reload to try again.';
   }
