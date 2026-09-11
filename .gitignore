@@ -1,0 +1,11 @@
+# big raw data and intermediate files (recreate with the pipeline)
+pipeline/raw/
+pipeline/build/
+pipeline/node_modules/
+pipeline/extras/name_snapshot/*.npz
+pipeline/extras/name_snapshot/*.npy
+pipeline/extras/name_snapshot/*.png
+pipeline/extras/name_snapshot/*.gif
+__pycache__/
+*.pyc
+.DS_Store

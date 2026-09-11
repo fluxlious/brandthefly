@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrandTheFly</title>
+<link rel="canonical" href="https://fluxlious.github.io/brandthefly/">
+<meta name="description" content="How does a fly feel about your brand? Slide your brand through a simulation of a real fruit fly brain (138,639 neurons) and get a clip to post. An experiment by @fulutmd.">
+<meta property="og:title" content="How does a fly feel about your brand?">
+<meta property="og:description" content="Slide your brand through a simulated fruit fly brain, see what the fly does, and get a clip to post. An experiment by @fulutmd.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fluxlious.github.io/brandthefly/">
+<meta property="og:image" content="https://fluxlious.github.io/brandthefly/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@fulutmd">
+<meta name="twitter:title" content="How does a fly feel about your brand?">
+<meta name="twitter:description" content="Slide your brand through a simulated fruit fly brain and get a clip to post.">
+<meta name="twitter:image" content="https://fluxlious.github.io/brandthefly/preview.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪰</text></svg>">
+<style>html,body{margin:0}</style>
+</head>
+<body>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{
+  --void:#05060A; --deck:#0B0E15; --deck-2:#11151F; --line:#1B2130; --line-2:#2A3244;
+  --ink:#F2F4F8; --dim:#8990A0; --faint:#586072;
+  --logo:#62E2FF; --react:#FF8A3D; --eye:#D2402F;
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
+  --ui:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Martian Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html,body{background:var(--void);color:var(--ink)}
+body{margin:0;font:16px/1.55 var(--ui);-webkit-font-smoothing:antialiased;padding-inline:clamp(16px,3vw,40px)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--logo);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font:500 11px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+h2{font:900 clamp(40px,6vw,76px)/.92 var(--display);text-transform:uppercase;letter-spacing:.005em;margin:0;text-wrap:balance}
+.lede{color:var(--dim);font-size:18px;max-width:58ch;margin:0;text-wrap:pretty}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:4px;padding:14px 20px;font:900 20px/1 var(--display);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0}
+.btn.primary{background:var(--logo);color:#02121A}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--logo)}
+.btn:disabled{opacity:.45;cursor:default;filter:none}
+
+/* nav */
+nav.top{display:flex;align-items:center;gap:28px;padding-block:18px}
+.brand{font:900 26px/1 var(--display);letter-spacing:.03em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:8px}
+.brand i{width:9px;height:9px;border-radius:50%;background:var(--eye);box-shadow:0 0 10px var(--eye)}
+.brand b{color:var(--logo);font-weight:900}
+nav.top .links{display:flex;gap:22px;margin-left:auto;font-size:14.5px;color:var(--dim)}
+nav.top .links a{text-decoration:none}
+nav.top .links a:hover{color:var(--ink)}
+nav.top .btn{padding:10px 14px;font-size:16px}
+@media (max-width:760px){nav.top .links{display:none} nav.top .btn{margin-left:auto}}
+
+/* hero */
+.hero{padding-block:28px 0;display:grid;gap:26px}
+.hero-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px 40px;align-items:end}
+@media (max-width:900px){.hero-head{grid-template-columns:1fr}.hero-side .brainbadge{order:3}.hero-side .lede{order:1}.hero-side .heroform{order:2}.hero-side .note{order:2}.hero-side .teaser{order:4}}
+.hero h1{margin:10px 0 0;font:900 clamp(52px,8.6vw,124px)/.86 var(--display);text-transform:uppercase;letter-spacing:.002em;text-wrap:balance}
+.hero h1 .c{color:var(--logo)}
+.h1wrap{position:relative}
+#h1fx{display:block;width:100%;height:auto;opacity:0;transition:opacity .8s;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%)}
+.brainbadge{margin:0;display:flex;flex-direction:column;gap:6px}
+.brainbadge figcaption{font:500 11px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+.brainbadge figcaption i{width:7px;height:7px;border-radius:50%;background:var(--react);box-shadow:0 0 8px var(--react)}
+#h1fx.on{opacity:1}
+.hero h1{position:relative;z-index:1}
+
+.hero h1 .a{color:var(--react)}
+.hero-side{display:flex;flex-direction:column;gap:18px;padding-bottom:8px}
+.hero-side .cta{display:flex;flex-wrap:wrap;gap:10px}
+.heroform{display:flex;gap:8px;flex-wrap:wrap}
+.heroform .input{flex:1 1 220px;min-width:0}
+.heroform .btn{flex:0 0 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hero-side .note a{color:var(--logo)}
+.teaser{margin:0;padding:10px 12px;border:1px dashed var(--line-2);border-radius:4px;font-size:14px;color:var(--dim)}
+.teaser b{color:var(--react);font-weight:700}
+.teaser a{color:var(--ink)}
+.scope{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#04050A}
+.scope canvas{display:block;width:100%;height:auto}
+.hud{position:absolute;font:400 10.5px/1.35 var(--mono);color:var(--dim);letter-spacing:.05em;pointer-events:none}
+.hud.tl{left:16px;top:14px;text-transform:uppercase}
+.hud.tl .live{color:var(--eye);margin-right:8px}
+.hud.tr{right:16px;top:14px;color:var(--ink);font-size:13px}
+.hud.bl{left:16px;bottom:14px;display:flex;gap:16px;flex-wrap:wrap}
+.hud.br{right:16px;bottom:14px;text-align:right}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.dot.c{background:var(--logo);box-shadow:0 0 8px var(--logo)}.dot.a{background:var(--react);box-shadow:0 0 8px var(--react)}
+.show{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:10px;align-items:stretch}
+.arena{position:relative;background:#090C13;border:1px solid var(--line);border-radius:8px;overflow:hidden;min-height:240px}
+.hud.tl2{left:16px;bottom:14px;right:16px;text-transform:uppercase;color:var(--ink)}
+.hud.tl2 small{display:block;margin-top:3px;text-transform:none;color:var(--dim);font-size:10px}
+@media (max-width:860px){.show{grid-template-columns:1fr}.arena{aspect-ratio:1.6/1}}
+.arena canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.arena-head{position:absolute;left:0;right:0;top:0;padding:12px 16px 10px;background:linear-gradient(180deg,rgba(9,12,19,.95),rgba(9,12,19,0));display:flex;flex-direction:column;gap:3px;pointer-events:none;z-index:1}
+.arena-head b{font:900 clamp(17px,1.6vw,21px)/1.05 var(--display);letter-spacing:.03em;text-transform:uppercase;color:var(--react)}
+.arena-head span{font:400 11px/1.35 var(--mono);color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font:500 11px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;padding:7px 9px;border-radius:3px;background:rgba(255,138,61,.14);color:#FFC29A;border:1px solid rgba(255,138,61,.5)}
+.chip.calm{background:transparent;color:var(--dim);border-color:var(--line-2)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;background:var(--deck)}
+.stats div{padding:16px 18px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font:900 clamp(28px,3.4vw,44px)/1 var(--display);letter-spacing:.01em}
+.stats span{font:400 11px/1.4 var(--mono);color:var(--dim);letter-spacing:.05em;text-transform:uppercase}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats div:nth-child(3){border-left:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* ticker tape */
+.tape{margin-top:40px;border-block:1px solid var(--line);overflow:hidden;white-space:nowrap;background:var(--deck);margin-inline:calc(-1 * clamp(16px,3vw,40px))}
+.tape-inner{display:inline-flex;gap:0;animation:tape 38s linear infinite;padding-block:12px}
+.tape span{font:500 12.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding-inline:22px;border-right:1px solid var(--line)}
+.tape span em{font-style:normal;color:var(--react)}
+.tape span strong{font-weight:500;color:var(--logo)}
+@keyframes tape{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.tape-inner{animation:none}}
+
+section.block{padding-block:clamp(64px,9vw,120px) 0}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:40px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.stack{display:flex;flex-direction:column;gap:18px}
+
+/* preview */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13.5px;color:var(--dim)}
+.input{width:100%;background:var(--deck);border:1px solid var(--line-2);border-radius:4px;padding:10px 14px;color:var(--ink);font:500 16px/1.3 var(--ui)}
+.input.big{font:900 36px/1.05 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.input:focus{border-color:var(--logo);outline:none}
+.note{font:400 12px/1.5 var(--mono);color:var(--faint)}
+.mind{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:36px;align-items:center;margin-top:26px}
+@media (max-width:760px){.mind{grid-template-columns:1fr}}
+.donut-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1/1}
+#donut{width:100%;height:100%;display:block}
+.donut-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:4px}
+.donut-center b{font:900 60px/1 var(--display)}
+.donut-center span{font:400 11px/1.4 var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.legend{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
+.legend li{display:grid;grid-template-columns:14px minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.legend .sw{width:12px;height:12px;border-radius:3px}
+.legend .nm{font:700 18px/1.2 var(--ui);overflow-wrap:anywhere}
+.legend .nm small{display:block;font:400 11px/1.4 var(--mono);color:var(--faint)}
+.legend .mn,.legend .pc{font:500 13px/1 var(--mono);color:var(--dim);text-align:right;white-space:nowrap}
+.seg.seg3{grid-template-columns:repeat(3,1fr)}
+.approval{display:flex;align-items:center;gap:20px;margin:24px 0 10px}
+.approval b{font:900 clamp(80px,11vw,140px)/.82 var(--display);color:var(--logo)}
+.approval span{font:500 13px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--dim)}
+.approval small{display:block;text-transform:none;letter-spacing:0;color:var(--faint)}
+.verdict-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:24px 0}
+.vcard{background:var(--deck);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.vcard .bn{font:900 30px/1 var(--display);text-transform:uppercase;overflow-wrap:anywhere}
+.vcard .bn small{display:block;margin-top:5px;font:400 11px/1.4 var(--mono);color:var(--faint);text-transform:none}
+.vbar{display:grid;grid-template-columns:1fr auto;gap:5px 10px;font:400 11px/1.3 var(--mono);color:var(--dim)}
+.vbar i{grid-column:1/-1;display:block;height:5px;background:var(--line)}
+.vbar i span{display:block;height:100%}
+.vpill{align-self:flex-start;font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:3px}
+.vpill.taste{color:#02121A;background:var(--logo)}
+.vpill.curious,.vpill.intrigued{color:#1A0C02;background:var(--react)}
+.vpill.noticed{color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.vcard .critic{font:400 10.5px/1.4 var(--mono);color:var(--faint)}
+.vcard.top{border-color:var(--logo);box-shadow:inset 0 0 0 1px var(--logo)}
+.clipverdict{margin:0;font:700 20px/1.25 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.clipverdict:empty{display:none}
+.field[hidden],.clipout[hidden],.clipres[hidden]{display:none!important}
+.clipout{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:6px;padding:14px;background:var(--deck)}
+.cliprow{font-size:12.5px;color:var(--ink)}
+.clipbar{height:4px;background:var(--line-2);border-radius:2px;overflow:hidden}
+.clipbar i{display:block;height:100%;width:0;background:var(--logo);transition:width .2s}
+.clipres{display:flex;flex-direction:column;gap:10px}
+.clipres video{width:100%;max-width:420px;aspect-ratio:1/1;border-radius:6px;border:1px solid var(--line-2);background:#000}
+.drop{position:relative;display:flex;flex-direction:column;gap:4px;border:1px dashed var(--line-2);border-radius:6px;padding:16px;cursor:pointer;background:var(--deck)}
+.drop:hover,.drop.over{border-color:var(--logo)}
+.drop b{font:900 22px/1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.drop span{font-size:13.5px;color:var(--dim)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--dim);cursor:pointer}
+.check input{accent-color:var(--logo)}
+.row-btns{display:flex;flex-wrap:wrap;gap:10px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line-2);margin-top:36px}
+.steps article{padding:22px 22px 6px 0;display:flex;flex-direction:column;gap:10px}
+.steps article+article{padding-left:22px;border-left:1px solid var(--line)}
+.steps .n{font:900 64px/.8 var(--display);color:var(--line-2)}
+.steps h3{margin:0;font:700 22px/1.2 var(--ui)}
+.steps p{margin:0;color:var(--dim);max-width:34ch}
+@media (max-width:800px){.steps{grid-template-columns:1fr}.steps article+article{padding-left:0;border-left:0;border-top:1px solid var(--line)}}
+
+/* report */
+.report{background:var(--deck);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.report header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;padding:16px 20px;border-bottom:1px dashed var(--line-2)}
+.report header b{font:900 24px/1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.report dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.report dt,.report dd{margin:0;padding:12px 20px;border-bottom:1px solid var(--line)}
+.report dt{color:var(--dim);font-size:14.5px}
+.report dt small{display:block;font:400 10.5px/1.4 var(--mono);color:var(--faint)}
+.report dd.num{font:500 14px/1.4 var(--mono);text-align:right;white-space:nowrap}
+.report dd.say{color:var(--react);font-weight:500;font-size:14.5px}
+@media (max-width:620px){.report dl{grid-template-columns:1fr auto}.report dd.say{grid-column:1/-1;padding-top:0;border-top:0}.report dt,.report dd.num{border-bottom:0}.report dd.say{border-bottom:1px solid var(--line)}}
+.verdict{padding:16px 20px;font:700 clamp(22px,2.6vw,30px)/1.1 var(--display);text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.verdict span{color:var(--logo)}
+
+/* slots */
+.day{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;margin-top:30px}
+.day .mono{color:var(--dim);font-size:13px}
+.slots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:900px){.slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.slots{grid-template-columns:1fr}}
+.slot{position:relative;display:flex;flex-direction:column;gap:12px;text-align:left;background:var(--deck);border:1px solid var(--line);border-radius:6px;padding:16px;cursor:pointer;color:var(--ink);font:inherit}
+.slot:hover{border-color:var(--line-2)}
+.slot[aria-pressed=true]{border-color:var(--logo);box-shadow:inset 0 0 0 1px var(--logo)}
+.slot .t{font:900 34px/.9 var(--display);text-transform:uppercase;letter-spacing:.02em}
+.pill{align-self:flex-start;font:500 10.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:5px 7px;border-radius:3px}
+.pill.open{color:var(--logo);box-shadow:inset 0 0 0 1px rgba(98,226,255,.5)}
+.pill.booked{color:#FFB3A8;box-shadow:inset 0 0 0 1px rgba(210,64,47,.6);background:rgba(210,64,47,.12)}
+.slot .price{font:400 12px/1.5 var(--mono);color:var(--dim)}
+.slot[disabled]{cursor:default;opacity:.55}
+.book{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;background:var(--deck);border:1px solid var(--line);border-radius:8px;padding:22px}
+@media (max-width:860px){.book{grid-template-columns:1fr}}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{background:var(--void);border:1px solid var(--line-2);border-radius:4px;padding:10px;color:var(--dim);cursor:pointer;font:500 14.5px/1.3 var(--ui);text-align:left}
+.seg button b{display:block;color:var(--ink);font:900 20px/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.seg button[aria-pressed=true]{border-color:var(--logo);box-shadow:inset 0 0 0 1px var(--logo)}
+.msg{white-space:pre-wrap;background:var(--void);border:1px dashed var(--line-2);border-radius:4px;padding:14px;font:400 12.5px/1.6 var(--mono);color:var(--ink);min-height:150px;margin:0}
+.toast{font:500 12px/1 var(--mono);color:var(--logo);min-height:14px}
+
+/* real / not */
+.truth{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;margin-top:36px;overflow:hidden}
+@media (max-width:760px){.truth{grid-template-columns:1fr}}
+.truth > div{padding:24px;display:flex;flex-direction:column;gap:12px}
+.truth > div + div{border-left:1px solid var(--line);background:var(--deck)}
+@media (max-width:760px){.truth > div + div{border-left:0;border-top:1px solid var(--line)}}
+.truth h3{margin:0;font:900 30px/1 var(--display);text-transform:uppercase;letter-spacing:.03em}
+.truth ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.truth li{padding-left:22px;position:relative;color:var(--dim)}
+.truth li b{color:var(--ink);font-weight:600}
+.truth li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:9px;border-radius:50%}
+.truth .yes li::before{background:var(--logo)}
+.truth .no li::before{background:transparent;box-shadow:inset 0 0 0 1.5px var(--faint)}
+
+/* faq */
+.faq{margin-top:30px;border-top:1px solid var(--line-2)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font:700 19px/1.3 var(--ui);display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 22px/1 var(--mono);color:var(--dim)}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:0 0 18px;color:var(--dim);max-width:66ch}
+
+.final{margin-top:clamp(70px,9vw,120px);border:1px solid var(--line);border-radius:10px;padding:clamp(28px,5vw,56px);display:grid;gap:20px;background:radial-gradient(120% 140% at 100% 0%,rgba(98,226,255,.10),transparent 55%),radial-gradient(90% 120% at 0% 100%,rgba(255,138,61,.10),transparent 55%),var(--deck)}
+footer{padding-block:40px 36px;display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;color:var(--faint);font:400 12px/1.6 var(--mono)}
+footer a{color:var(--dim)}
+</style>
+
+<div class="wrap">
+  <nav class="top" aria-label="Main">
+    <a class="brand" href="#top" id="top"><i aria-hidden="true"></i>BrandThe<b>Fly</b></a>
+    <div class="links"><a href="#preview">Test your brand</a><a href="#verdicts">Fly moods</a><a href="#faq">FAQ</a></div>
+    <a class="btn primary" href="#preview">Test your brand</a>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-head">
+      <div>
+        <div class="eyebrow">An experiment by @fulutmd · one simulated fruit fly brain</div>
+        <div class="h1wrap"><h1 id="h1">How does a <span class="a">fly</span> feel about <span class="c">your brand?</span></h1></div>
+      </div>
+      <div class="hero-side">
+        <figure class="brainbadge"><canvas id="h1fx" aria-label="A fruit fly brain, neurons firing"></canvas><figcaption><i></i>Live · 138,639 neurons firing</figcaption></figure>
+        <p class="lede">Your brand slides through a simulation of a real fruit fly brain, all 138,639 neurons. You see what the fly does, how it feels about it, and get a clip to post.</p>
+        <form class="heroform" id="heroForm">
+          <label class="sr" for="heroBrand">Your brand</label>
+          <input class="input big" id="heroBrand" maxlength="24" placeholder="YOUR BRAND" autocomplete="off" spellcheck="false">
+          <button class="btn primary" type="submit">Test it</button>
+        </form>
+        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · runs in your browser, nothing is uploaded</p>
+        <p class="teaser"><b>Soon:</b> rent minutes in its mind. <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a> to get in early.</p>
+      </div>
+    </div>
+
+    <div class="show">
+    <div class="scope hero-scope">
+      <canvas id="hero" width="1101" height="551" aria-label="Replay: BRAND THE FLY sliding through a simulated fly brain"></canvas>
+      <div class="hud tl"><span class="live">● Replay</span>1 · Your brand, burned into the brain</div>
+      <div class="hud tr" id="heroT">loading brain…</div>
+      <div class="hud bl"><span><i class="dot c"></i>real neurons firing your logo</span><span><i class="dot a"></i>the brain reacting</span></div>
+      <div class="hud br">5× slow motion</div>
+    </div>
+    <div class="arena" id="arenaWrap">
+      <canvas id="arena" aria-label="The fly reacting to its brain's output neurons"></canvas>
+      <div class="arena-head"><b>2 · The fly's reaction to your brand</b><span>What its brain tells the body while your logo fires</span><div class="chips" id="chips"><span class="chip calm">Loading fly…</span></div></div>
+      <div class="hud tl2"><small>body animated from the brain's output neurons · 1 mm grid</small></div>
+    </div>
+    </div>
+
+    <div class="stats">
+      <div><b>138,639</b><span>real neurons</span></div>
+      <div><b>4.9M</b><span>connections</span></div>
+      <div><b>11 s</b><span>clip to post</span></div>
+      <div><b>0</b><span>real flies involved</span></div>
+    </div>
+  </header>
+
+  <div class="tape" aria-hidden="true"><div class="tape-inner" id="tape"></div></div>
+
+  <section class="block" id="preview">
+    <div class="split">
+      <div class="stack">
+        <div class="eyebrow">Live preview</div>
+        <h2>See your brand on the panel</h2>
+        <p class="lede">Type your brand or drop in your logo. Every lit point is a real neuron, at its real position in the brain.</p>
+        <div class="seg" role="group" aria-label="Preview type">
+          <button id="pvText" aria-pressed="false"><b>Text</b>LED dot ticker</button>
+          <button id="pvLogo" aria-pressed="true"><b>Logo</b>Upload a PNG</button>
+        </div>
+        <div class="field" id="textField" hidden><label for="brandIn">Your brand</label><input class="input big" id="brandIn" maxlength="24" value="YOUR BRAND" autocomplete="off" spellcheck="false"></div>
+        <div class="field" id="logoField">
+          <label class="drop" for="logoIn"><input type="file" id="logoIn" accept="image/png,image/jpeg,image/webp,image/svg+xml"><b>Choose your logo</b><span id="logoName">Showing an example mark. A PNG with a transparent background works best.</span></label>
+          <label class="check" for="invertIn"><input type="checkbox" id="invertIn"> Invert shape (for light logos on a dark background)</label>
+        </div>
+        <div class="row-btns">
+          <button class="btn primary" id="makeClip">Make my clip</button>
+          <a class="btn ghost" id="bookThis" href="https://x.com/fulutmd" target="_blank" rel="noopener">Follow @fulutmd</a>
+        </div>
+        <div class="clipout" id="clipOut" hidden>
+          <div class="cliprow"><span class="mono" id="clipMsg">Loading…</span></div>
+          <div class="clipbar"><i id="clipBar"></i></div>
+          <div class="clipres" id="clipResult" hidden>
+            <video id="clipVideo" controls playsinline loop muted></video>
+            <div class="row-btns">
+              <button class="btn primary" id="saveClip">Save clip</button>
+              <a class="btn ghost" id="shareX" href="#" target="_blank" rel="noopener">Post it on X</a>
+            </div>
+            <p class="clipverdict" id="clipVerdict"></p>
+            <p class="note" id="saveMsg">Save the clip, then attach it to your post.</p>
+          </div>
+        </div>
+        <p class="note">“Make my clip” runs all 138,639 neurons right in your browser, then records an 11-second video. Keep this tab open while it records. Your logo never leaves your device. On phones it can take a minute or two.</p>
+      </div>
+      <div class="scope"><canvas id="prev" width="1101" height="551" aria-label="Preview of your brand sliding across the brain"></canvas><div class="hud tl">Preview · your logo only</div></div>
+    </div>
+  </section>
+
+  <section class="block" id="verdicts">
+    <div class="eyebrow">Fly moods</div>
+    <h2>How did the fly feel about it?</h2>
+    <div class="approval"><b id="approval">0%</b><span>as tasty as sugar<small id="approvalSub"></small></span></div>
+    <p class="lede">Every brand gets the same brain, so nobody gets a better mood by asking nicely. Fun labels, real neurons: appetite is its proboscis motor neuron compared with a real sugar taste, curiosity is its antenna motor neurons, buzz is how much of its brain fired.</p>
+    <div class="verdict-list" id="verdictList"></div>
+    <div class="row-btns"><a class="btn primary" href="#preview">Test your brand</a></div>
+  </section>
+
+  <section class="block" id="mind">
+    <div class="split">
+      <div class="stack">
+        <div class="eyebrow">Next experiment</div>
+        <h2>Should brands get minutes in its mind?</h2>
+        <p class="lede">The idea: one fly, 1,440 minutes a day, and brands take turns living rent-free in its brain. Nothing is for sale. If you'd want your brand in there, tell me. Enough yeses and I'll build it.</p>
+      </div>
+      <div class="stack">
+        <div class="eyebrow">Your DM, ready to send</div>
+        <div class="field"><label for="bkBrand">Brand name (optional)</label><input class="input" id="bkBrand" maxlength="40" autocomplete="organization"></div>
+        <pre class="msg" id="msg"></pre>
+        <div class="row-btns">
+          <button class="btn primary" id="copyMsg">Copy message</button>
+          <a class="btn ghost" id="dmX" href="https://x.com/fulutmd" target="_blank" rel="noopener">Open @fulutmd on X</a>
+        </div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="eyebrow">FAQ</div>
+    <h2>Questions</h2>
+    <div class="faq">
+      <details><summary>Is this a real fly?</summary><p><b>Real:</b> the brain wiring (the FlyWire connectome, all 138,639 neurons), the neuron model from Shiu et al. 2024, and every neuron's position. Which neurons join in and what the brain tells the body comes from the wiring, not a script.</p><p><b>Not real:</b> no animal sees your logo; it's a computer simulation. The fly's body is animated from its output neurons, and the mood labels are playful names for real neuron activity.</p></details>
+      <details><summary>Can I choose what the fly does?</summary><p>No, and that's the fun part. Your logo lights up a different set of neurons than anyone else's, so the wiring gives every brand its own reaction. Some flies turn, some reach for food, some try to escape.</p></details>
+      <details><summary>What do I get?</summary><p>A square clip of your logo firing through the brain with the fly reacting next to it, plus its dopamine verdict. Post it wherever you like.</p></details>
+      <details><summary>Can my brand make the fly hungry?</summary><p>Maybe. Appetite measures the fly's proboscis motor neuron (MN9, the one that sticks its tongue out) against a real sugar taste in the same model. Results differ by brand and a little from run to run. Its dopamine reward neurons are a tougher crowd: they have stayed quiet for every brand so far.</p></details>
+      <details><summary>Which logos are allowed?</summary><p>Your own brand or product. No hate, adult content, scams, or logos you don't have the right to use.</p></details>
+      <details><summary>Can I buy a spot in the fly's mind?</summary><p>Not yet. This is an experiment. If you'd want your brand in there, DM <a href="https://x.com/fulutmd" target="_blank" rel="noopener">@fulutmd</a> and say so.</p></details>
+    </div>
+  </section>
+
+
+  <footer>
+    <span>BrandTheFly · an experiment by <a href="https://x.com/fulutmd" target="_blank" rel="noopener">@fulutmd</a> · inspired by BrandMyMac</span>
+    <span>Brain data: <a href="https://flywire.ai" target="_blank" rel="noopener">FlyWire connectome</a> · Model: <a href="https://github.com/philshiu/Drosophila_brain_model" target="_blank" rel="noopener">Shiu et al. 2024</a></span>
+  </footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+/* ====== Edit these ====== */
+const CONFIG = {
+  xHandle: 'fulutmd',             // your X username, without @
+  pageUrl: location.origin + location.pathname, // link used in share posts
+  // Fly moods from real simulation runs (add new ones from the clip maker results)
+  verdicts: [
+    // neurons = neurons that fired; appetite = MN9 Hz; curiosity = antenna motor neurons Hz; reward/punishment = dopamine Hz
+    { brand: 'BRAND THE FLY', neurons: 20692, appetite: 19.4, curiosity: 9.2, reward: 3.1, punishment: 109.8, note: 'example run' },
+    { brand: 'CEM', neurons: 21136, appetite: 20.6, curiosity: 6.8, reward: 2.6, punishment: 94.2, note: 'the founder' }
+  ]
+};
+/* ======================== */
+
+const $ = id => document.getElementById(id);
+const N = 138639;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+var CLIP = { wires: null, groups: null, busy: false, url: null, blob: null, ext: 'mp4', lastVerdict: null };
+// Fun labels, real neurons. Appetite = proboscis motor neuron MN9 vs a real sugar taste (146 Hz in this model).
+// Curiosity = antenna motor neurons. Buzz = share of all 138,639 neurons that fired.
+const SUGAR_MN9 = 146;
+function moodOf(v) {
+  const buzz = 100 * v.neurons / 138639, appetite = Math.min(100, 100 * v.appetite / SUGAR_MN9), curiosity = Math.min(100, 100 * v.curiosity / 25);
+  const kind = appetite >= 50 ? 'taste' : appetite >= 10 ? 'intrigued' : curiosity >= 30 ? 'curious' : 'noticed';
+  return { buzz, appetite, curiosity, kind };
+}
+const MOOD_TEXT = { taste: 'The fly wants a taste', intrigued: 'The fly is intrigued', curious: 'The fly is curious', noticed: 'The fly noticed you' };
+/* ---------- ticker tape ---------- */
+(() => {
+  const top = CONFIG.verdicts.slice().sort((a, b) => moodOf(b).appetite - moodOf(a).appetite)[0];
+  const items = [
+    '<strong>138,639</strong> neurons', top ? `Tastiest so far: ${top.brand} <em>${Math.round(moodOf(top).appetite)}% as tasty as sugar</em>` : '',
+    'Fly turned <em>hard left</em>', 'Antennae <em>twitching</em>', 'Proboscis <em>out</em>', '<strong>15,844</strong> neurons joined in', 'Made by <strong>@fulutmd</strong>'
+  ];
+  const html = items.filter(Boolean).map(t => `<span>${t}</span>`).join('');
+  $('tape').innerHTML = html + html;
+})();
+
+/* ---------- brain geometry ---------- */
+let X, Y, OK, xmin, xmax, ymin, ymax, BW, BH, PIX, BASE;
+const SC = 1.3, PAD = 16;
+function setupGeometry(pos) {
+  X = new Float32Array(N); Y = new Float32Array(N); OK = new Uint8Array(N);
+  xmin = ymin = 1e9; xmax = ymax = -1e9;
+  for (let i = 0; i < N; i++) { const x = pos[2 * i] / 10, y = pos[2 * i + 1] / 10; if (x > 0) { OK[i] = 1; X[i] = x; Y[i] = y; xmin = Math.min(xmin, x); xmax = Math.max(xmax, x); ymin = Math.min(ymin, y); ymax = Math.max(ymax, y); } }
+  BW = Math.round((xmax - xmin + 2 * PAD) * SC); BH = Math.round((ymax - ymin + 2 * PAD) * SC);
+  PIX = new Int32Array(N).fill(-1);
+  const dens = new Float32Array(BW * BH);
+  for (let i = 0; i < N; i++) if (OK[i]) { const p = Math.round((Y[i] - ymin + PAD) * SC) * BW + Math.round((X[i] - xmin + PAD) * SC); PIX[i] = p; dens[p]++; }
+  const blur = (s) => { const t = new Float32Array(s.length), o = new Float32Array(s.length);
+    for (let y = 0; y < BH; y++) for (let x = 1; x < BW - 1; x++) { const i = y * BW + x; t[i] = (s[i - 1] + s[i] + s[i + 1]) / 3; }
+    for (let y = 1; y < BH - 1; y++) for (let x = 0; x < BW; x++) { const i = y * BW + x; o[i] = (t[i - BW] + t[i] + t[i + BW]) / 3; } return o; };
+  BASE = blur(blur(dens)); let mx = 0;
+  for (let i = 0; i < BASE.length; i++) { BASE[i] = Math.log1p(BASE[i] * 6); mx = Math.max(mx, BASE[i]); }
+  for (let i = 0; i < BASE.length; i++) BASE[i] /= mx;
+}
+const hasFilter = (() => { try { return typeof document.createElement('canvas').getContext('2d').filter === 'string'; } catch (e) { return false; } })();
+function makeView(canvas) {
+  canvas.width = BW; canvas.height = BH;
+  const ctx = canvas.getContext('2d'), layer = document.createElement('canvas'); layer.width = BW; layer.height = BH;
+  const lctx = layer.getContext('2d'), img = lctx.createImageData(BW, BH);
+  return { canvas, ctx, layer, lctx, img, A: new Float32Array(BW * BH), B: new Float32Array(BW * BH) };
+}
+function paint(v, aGain = 2.2, bGain = 1.6) {
+  const d = v.img.data, A = v.A, B = v.B;
+  for (let i = 0, q = 0; i < A.length; i++, q += 4) {
+    const bs = BASE[i]; let r = 4 + bs * 34, g = 6 + bs * 34, b = 10 + bs * 42;
+    if (B[i] > 0.001) { const t = 1 - Math.exp(-B[i] * bGain); r += (255 - r) * t; g += (138 - g) * t; b += (61 - b) * t; }
+    if (A[i] > 0.001) { const t = 1 - Math.exp(-A[i] * aGain); r += (98 - r) * t; g += (226 - g) * t; b += (255 - b) * t; }
+    d[q] = r; d[q + 1] = g; d[q + 2] = b; d[q + 3] = 255;
+  }
+  v.lctx.putImageData(v.img, 0, 0);
+  v.ctx.drawImage(v.layer, 0, 0);
+  if (hasFilter) { v.ctx.save(); v.ctx.globalCompositeOperation = 'lighter'; v.ctx.filter = 'blur(5px)'; v.ctx.globalAlpha = 0.55; v.ctx.drawImage(v.layer, 0, 0); v.ctx.restore(); }
+}
+const dep2 = (L, p, w) => { L[p] += w; L[p + 1] += w; L[p + BW] += w; L[p + BW + 1] += w; };
+const dep3 = (L, p, w) => { L[p] += w; L[p + 1] += w; L[p + BW] += w; L[p + BW + 1] += w; const e = w * 0.45; L[p - 1] += e; L[p + 2] += e; L[p - BW] += e; L[p + 2 * BW] += e; L[p - BW + 1] += e; L[p + 2 * BW + 1] += e; L[p + BW - 1] += e; L[p + BW + 2] += e; };
+const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+
+/* ---------- hero replay (real simulation) ---------- */
+let hero = null;
+function decodeHero(h) {
+  const counts = new Uint16Array(Uint8Array.from(atob(h.counts), c => c.charCodeAt(0)).buffer);
+  const bin = atob(h.b64), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const F = counts.length, start = new Uint32Array(F + 1);
+  for (let f = 0; f < F; f++) start[f + 1] = start[f] + counts[f];
+  const codes = new Int32Array(start[F]);
+  let p = 0;
+  for (let f = 0; f < F; f++) {
+    let prev = 0;
+    for (let k = start[f]; k < start[f + 1]; k++) {
+      let c = bytes[p++], val = c & 127;
+      if (c & 128) { c = bytes[p++]; val |= (c & 127) << 7; if (c & 128) { c = bytes[p++]; val |= (c & 127) << 14; } }
+      const delta = val >> 1, flag = val & 1;
+      prev = (k === start[f]) ? delta : prev + delta;
+      codes[k] = flag ? -(prev + 1) : prev; // negative = neuron driven by the logo
+    }
+  }
+  return { meta: h.meta, start, codes, F };
+}
+function runHero() {
+  const v = makeView($('hero'));
+  const SLOW = 5, HOLD = 900;
+  let t0 = null, lastF = -1;
+
+  const step = ts => {
+    if (t0 === null) t0 = ts;
+    const total = hero.F * hero.meta.bin_ms * SLOW + HOLD;
+    const el = (ts - t0) % total;
+    let f = Math.min(hero.F - 1, Math.floor(el / (hero.meta.bin_ms * SLOW)));
+    if (reduce) f = 330;
+    if (f !== lastF && (onScreen(v.canvas) || lastF < 0)) {
+      if (f < lastF || lastF < 0) { v.A.fill(0); v.B.fill(0); lastF = f - 1; }
+      for (let g = Math.max(lastF + 1, f - 6); g <= f; g++) {
+        for (let i = 0; i < v.A.length; i++) { v.A[i] *= 0.62; v.B[i] *= 0.55; }
+        for (let k = hero.start[g]; k < hero.start[g + 1]; k++) {
+          const c = hero.codes[k], n = c < 0 ? -c - 1 : c, p = PIX[n]; if (p < 0) continue;
+          if (c < 0) dep3(v.A, p, 1);
+          else { v.B[p] += 1; v.B[p + 1] += 0.6; }
+        }
+      }
+      lastF = f; paint(v, 2.6, 1.4); renderFly(f);
+      $('heroT').textContent = `t = ${(f * hero.meta.bin_ms).toFixed(0)} ms`;
+    }
+    if (!reduce) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function ell(ctx, x, y, rx, ry, rot = 0) { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); }
+function drawFly(ctx, sx, sy, s, st) {
+  ctx.save(); ctx.translate(sx, sy); ctx.rotate(st.h); ctx.scale(s, s);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // legs
+  const legs = [
+    [-1, -0.62, -1.0, -1.55, 0], [-1, -0.42, -1.42, -0.32, 1], [-1, -0.2, -1.12, 0.9, 0],
+    [1, -0.62, 1.0, -1.55, 1], [1, -0.42, 1.42, -0.32, 0], [1, -0.2, 1.12, 0.9, 1]];
+  const tuck = Math.min(1, st.z * 1.4);
+  for (const [side, ay, fxn, fyn, tri] of legs) {
+    const amp = side < 0 ? st.ampL : st.ampR, p = st.ph + tri * Math.PI;
+    const ax = side * 0.3;
+    let fx = fxn, fy = fyn + amp * 0.3 * Math.cos(p);
+    const swing = amp > 0.05 && Math.sin(p) > 0;
+    fx = fx + (ax * 1.6 - fx) * tuck * 0.55; fy = fy + (ay - fy) * tuck * 0.45;
+    const mx = (ax + fx) / 2 + side * 0.28, my = (ay + fy) / 2 - 0.12;
+    ctx.strokeStyle = swing ? '#8A6536' : '#5E3F1C'; ctx.lineWidth = 0.075;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(mx, my); ctx.lineTo(fx, fy); ctx.stroke();
+    ctx.fillStyle = '#3C2912'; ell(ctx, fx, fy, 0.05, 0.05); ctx.fill();
+  }
+  // proboscis
+  if (st.prob > 0.02) {
+    const L = 0.1 + st.prob * 0.5 + st.pump * 0.05 * Math.sin(st.t * 2 * Math.PI * 8);
+    ctx.save(); ctx.translate(0, -0.82); ctx.rotate(st.yaw);
+    ctx.strokeStyle = '#6E4820'; ctx.lineWidth = 0.13; ctx.beginPath(); ctx.moveTo(0, -0.35); ctx.lineTo(0, -0.35 - L); ctx.stroke();
+    ctx.fillStyle = '#8C5E2A'; ell(ctx, 0, -0.38 - L, 0.12, 0.08); ctx.fill(); ctx.restore();
+  }
+  // abdomen
+  ell(ctx, 0, 0.62, 0.46, 0.84); ctx.fillStyle = '#B38447'; ctx.fill();
+  ctx.save(); ell(ctx, 0, 0.62, 0.46, 0.84); ctx.clip(); ctx.fillStyle = 'rgba(52,32,14,.88)';
+  for (const by of [0.2, 0.5, 0.8, 1.1, 1.36]) ctx.fillRect(-0.6, by, 1.2, by > 1 ? 0.2 : 0.13);
+  ctx.restore();
+  // thorax
+  ell(ctx, 0, -0.38, 0.44, 0.52); ctx.fillStyle = '#8E602A'; ctx.fill();
+  ctx.fillStyle = 'rgba(255,220,160,.10)'; ell(ctx, -0.1, -0.5, 0.18, 0.3, -0.3); ctx.fill();
+  // head
+  ctx.save(); ctx.translate(0, -0.82); ctx.rotate(st.yaw);
+  ell(ctx, 0, -0.2, 0.36, 0.28); ctx.fillStyle = '#7C5224'; ctx.fill();
+  for (const side of [-1, 1]) {
+    ell(ctx, side * 0.25, -0.2, 0.16, 0.24, side * 0.2); ctx.fillStyle = '#B7342A'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,190,170,.35)'; ell(ctx, side * 0.21, -0.28, 0.05, 0.07); ctx.fill();
+    const tw = (side < 0 ? st.antL : st.antR) * 0.35 * Math.sin(st.t * 2 * Math.PI * 14 + side);
+    ctx.save(); ctx.translate(side * 0.08, -0.44); ctx.rotate(side * (0.35 + tw));
+    ctx.strokeStyle = '#6A4520'; ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -0.18); ctx.stroke();
+    ctx.strokeStyle = 'rgba(120,85,45,.9)'; ctx.lineWidth = 0.02; ctx.beginPath(); ctx.moveTo(0, -0.18); ctx.lineTo(side * 0.08, -0.42); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+  // wings
+  const drawWing = (side, ang, alpha) => {
+    ctx.save(); ctx.translate(side * 0.12, -0.22); ctx.rotate(-side * ang);
+    ell(ctx, 0, 0.95, 0.36, 0.98); ctx.fillStyle = `rgba(205,222,245,${0.2 * alpha})`; ctx.fill();
+    ctx.strokeStyle = `rgba(225,235,250,${0.5 * alpha})`; ctx.lineWidth = 0.02; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 0.05); ctx.lineTo(-side * 0.05, 1.8); ctx.moveTo(0, 0.1); ctx.lineTo(side * 0.2, 1.65); ctx.stroke();
+    ctx.restore();
+  };
+  for (const side of [-1, 1]) {
+    const ang = 0.14 + st.wing * 1.05;
+    if (st.air > 0 && st.wing > 0.6) { for (const o of [-0.45, -0.15, 0.15, 0.45]) drawWing(side, ang + o, 0.55); }
+    else drawWing(side, ang, 1);
+  }
+  ctx.restore();
+}
+
+
+let FLY = null;
+function deriveFly(h) {
+  const dec = b => new Uint16Array(Uint8Array.from(atob(b), c => c.charCodeAt(0)).buffer);
+  const R = {}; for (const k in h.rates) R[k] = dec(h.rates[k]);
+  const gf = dec(h.gf), n = gf.length, cl = (v, a, b) => Math.max(a, Math.min(b, v));
+  const F = {}; ['x', 'y', 'h', 'ph', 'ampL', 'ampR', 'z', 'wing', 'prob', 'pump', 'antL', 'antR', 'yaw', 'walk', 'turn', 'back', 'air'].forEach(k => F[k] = new Float32Array(n));
+  let x = 0, y = 0, hd = 0, ph = 0, z = 0, wing = 0, prob = 0, yaw = 0, lastGF = -1e9;
+  const dt = h.meta.bin_ms / 1000;
+  for (let k = 0; k < n; k++) {
+    const sL = R.DNa01_L[k] + R.DNa02_L[k], sR = R.DNa01_R[k] + R.DNa02_R[k];
+    const walk = cl((sL + sR) / 2 / 110, 0, 1.2), turn = cl((sL - sR) / 140, -1, 1);
+    const back = cl((R.MDN_L[k] + R.MDN_R[k]) / 2 / 45, 0, 1);
+    if (gf[k] > 0) lastGF = k;
+    const air = (k - lastGF) * h.meta.bin_ms < 50 ? 1 : 0;
+    z += (air - z) * (air ? 0.17 : 0.09); wing += (air - wing) * (air ? 0.58 : 0.12);
+    const fwd = air ? 0 : walk - 1.4 * back, speed = air ? 30 * z : 14 * fwd;
+    hd += (air ? 0 : -5 * turn) * dt; x += Math.sin(hd) * speed * dt; y += -Math.cos(hd) * speed * dt;
+    const act = air ? 0 : cl(Math.abs(fwd) + Math.abs(turn) * 0.7, 0, 1.2);
+    ph += 2 * Math.PI * 12 * act * dt * (fwd < -0.05 ? -1 : 1);
+    prob += (cl(Math.max(R.MN9[k] / 140, R.proboscis_MN[k] / 35), 0, 1) - prob) * 0.1;
+    yaw += (cl((R.neck_MN_L[k] - R.neck_MN_R[k]) / 20, -1, 1) * 0.3 - yaw) * 0.15;
+    F.x[k] = x; F.y[k] = y; F.h[k] = hd; F.ph[k] = ph; F.z[k] = z; F.wing[k] = wing; F.air[k] = air;
+    F.ampL[k] = act * (1 - 0.7 * Math.max(0, turn)); F.ampR[k] = act * (1 - 0.7 * Math.max(0, -turn));
+    F.prob[k] = prob; F.pump[k] = cl(R.ingest_MN[k] / 50, 0, 1);
+    F.antL[k] = cl(R.antenna_MN_L[k] / 30, 0, 1); F.antR[k] = cl(R.antenna_MN_R[k] / 30, 0, 1);
+    F.yaw[k] = yaw; F.walk[k] = walk; F.turn[k] = turn; F.back[k] = back;
+  }
+  FLY = { F, n, bin: h.meta.bin_ms };
+}
+const actx = $('arena').getContext('2d');
+let lastChips = '';
+function renderFly(f) {
+  const c = $('arena'), dpr = Math.min(2, devicePixelRatio || 1);
+  const Wc = Math.round(c.clientWidth * dpr), Hc = Math.round(c.clientHeight * dpr);
+  if (c.width !== Wc || c.height !== Hc) { c.width = Wc; c.height = Hc; }
+  if (!FLY || !Wc) return;
+  const F = FLY.F, k = Math.min(FLY.n - 1, f), ctx = actx;
+  const fx = F.x[k], fy = F.y[k], ppm = Math.min(Hc / 8, Wc / 9), cx = Wc / 2, cy = Hc * 0.5;
+  ctx.fillStyle = '#090C13'; ctx.fillRect(0, 0, Wc, Hc);
+  ctx.lineWidth = Math.max(1, ppm / 60);
+  for (let gx = Math.floor(fx - cx / ppm); gx <= fx + (Wc - cx) / ppm; gx++) { ctx.strokeStyle = gx % 5 === 0 ? 'rgba(150,170,205,.15)' : 'rgba(150,170,205,.06)'; const sx = (gx - fx) * ppm + cx; ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, Hc); ctx.stroke(); }
+  for (let gy = Math.floor(fy - cy / ppm); gy <= fy + (Hc - cy) / ppm; gy++) { ctx.strokeStyle = gy % 5 === 0 ? 'rgba(150,170,205,.15)' : 'rgba(150,170,205,.06)'; const sy = (gy - fy) * ppm + cy; ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(Wc, sy); ctx.stroke(); }
+  if (k > 1) { ctx.strokeStyle = 'rgba(255,138,61,.45)'; ctx.lineWidth = Math.max(1.5, ppm / 26); ctx.lineCap = 'round'; ctx.beginPath();
+    for (let j = 0; j <= k; j += 2) { const sx = (F.x[j] - fx) * ppm + cx, sy = (F.y[j] - fy) * ppm + cy; j ? ctx.lineTo(sx, sy) : ctx.moveTo(sx, sy); } ctx.stroke(); }
+  const st = { h: F.h[k], ph: F.ph[k], ampL: F.ampL[k], ampR: F.ampR[k], z: F.z[k], wing: F.wing[k], prob: F.prob[k], pump: F.pump[k], antL: F.antL[k], antR: F.antR[k], yaw: F.yaw[k], air: F.air[k], t: k * FLY.bin / 1000 };
+  ctx.save(); ctx.translate(cx + st.z * ppm * 0.9, cy + st.z * ppm * 1.2); ctx.rotate(st.h);
+  ctx.fillStyle = `rgba(0,0,0,${0.45 - 0.2 * st.z})`; ctx.beginPath(); ctx.ellipse(0, 0, ppm * 0.55, ppm * 1.35, 0, 0, 7); ctx.fill(); ctx.restore();
+  drawFly(ctx, cx, cy, ppm * (1 + 0.28 * st.z), st);
+  const chips = [];
+  if (F.air[k]) chips.push('Escape takeoff');
+  else if (F.back[k] > 0.25) chips.push('Walking backward');
+  else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) chips.push('Turning left');
+  else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) chips.push('Turning right');
+  else if (F.walk[k] > 0.25) chips.push('Walking');
+  if (F.prob[k] > 0.3) chips.push('Proboscis out');
+  if (F.pump[k] > 0.3) chips.push('Swallowing');
+  if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitch');
+  if (Math.abs(F.yaw[k]) > 0.08) chips.push('Head turn');
+  const html = chips.length ? chips.map(t => `<span class="chip">${t}</span>`).join('') : '<span class="chip calm">Waiting for your logo</span>';
+  if (html !== lastChips) { $('chips').innerHTML = html; lastChips = html; }
+}
+
+/* ---------- live preview (geometry only) ---------- */
+const FONT = {"A":"01110100011000111111100011000110001","B":"11110100011000111110100011000111110","C":"01110100011000010000100001000101110","D":"11100100101000110001100011001011100","E":"11111100001000011110100001000011111","F":"11111100001000011110100001000010000","G":"01110100011000010111100011000101111","H":"10001100011000111111100011000110001","I":"01110001000010000100001000010001110","J":"00111000100001000010000101001001100","K":"10001100101010011000101001001010001","L":"10000100001000010000100001000011111","M":"10001110111010110101100011000110001","N":"10001100011100110101100111000110001","O":"01110100011000110001100011000101110","P":"11110100011000111110100001000010000","Q":"01110100011000110001101011001001101","R":"11110100011000111110101001001010001","S":"01111100001000001110000010000111110","T":"11111001000010000100001000010000100","U":"10001100011000110001100011000101110","V":"10001100011000110001100010101000100","W":"10001100011000110101101011010101010","X":"10001100010101000100010101000110001","Y":"10001100011000101010001000010000100","Z":"11111000010001000100010001000011111","0":"01110100011001110101110011000101110","1":"00100011000010000100001000010001110","2":"01110100010000100010001000100011111","3":"11111000100010000010000011000101110","4":"00010001100101010010111110001000010","5":"11111100001111000001000011000101110","6":"00110010001000011110100011000101110","7":"11111000010001000100010000100001000","8":"01110100011000101110100011000101110","9":"01110100011000101111000010001001100","!":"00100001000010000100001000000000100","?":"01110100010000100010001000000000100",".":"00000000000000000000000000110001100","-":"00000000000000011111000000000000000","&":"01100100101010001000101011001001101","'":"01100001000100000000000000000000000",":":"00000011000110000000011000110000000","/":"00000000010001000100010001000000000","+":"00000001000010011111001000010000000","#":"01010010101111101010111110101001010","@":"01110100011011110101101111000001111"," ":"00000000000000000000000000000000000"};
+let cand = null;
+function buildCandidates(yc) {
+  const PITCH = 20, RAD = 8.5, taken = new Set(), out = [];
+  const order = new Int32Array(N); for (let i = 0; i < N; i++) order[i] = i;
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = order[i]; order[i] = order[j]; order[j] = t; }
+  for (const i of order) {
+    if (!OK[i]) continue;
+    const r = Math.round((Y[i] - yc) / PITCH) + 3; if (r < 0 || r > 6) continue;
+    const dy = Y[i] - (yc + (r - 3) * PITCH); if (Math.abs(dy) > RAD) continue;
+    const key = Math.floor((Y[i] - ymin) / 4) * 4096 + Math.floor((X[i] - xmin) / 4);
+    if (taken.has(key)) continue; taken.add(key);
+    out.push([i, r, Math.sqrt(RAD * RAD - dy * dy)]);
+  }
+  cand = out;
+}
+function columnsFor(text) {
+  const t = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/\u0131/g, 'I');
+  const cols = [];
+  for (const ch of t) { const g = FONT[ch] || FONT[' ']; for (let c = 0; c < 5; c++) cols.push([0, 1, 2, 3, 4, 5, 6].map(r => g[r * 5 + c] === '1')); cols.push([false, false, false, false, false, false, false]); }
+  return cols;
+}
+/* logo → silhouette mask */
+function logoMask(img, invert) {
+  const w = Math.min(320, img.width), h = Math.max(1, Math.round(img.height * w / img.width));
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0, w, h);
+  const px = ctx.getImageData(0, 0, w, h).data;
+  let transp = 0; for (let i = 3; i < px.length; i += 4) if (px[i] < 200) transp++;
+  const alphaMode = transp / (w * h) > 0.03;
+  const at = (x, y) => { const q = 4 * (y * w + x); return [px[q], px[q + 1], px[q + 2]]; };
+  const cs = [at(0, 0), at(w - 1, 0), at(0, h - 1), at(w - 1, h - 1)];
+  const bg = [0, 1, 2].map(k => (cs[0][k] + cs[1][k] + cs[2][k] + cs[3][k]) / 4);
+  const m = new Uint8Array(w * h);
+  let x0 = w, x1 = -1, y0 = h, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const q = 4 * (y * w + x);
+    let on = alphaMode ? px[q + 3] > 128 : Math.hypot(px[q] - bg[0], px[q + 1] - bg[1], px[q + 2] - bg[2]) > 80;
+    if (invert) on = !on;
+    if (on) { m[y * w + x] = 1; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) return null;
+  // crop to the logo's own bounds so it fills the panel
+  const cw = x1 - x0 + 1, ch = y1 - y0 + 1, out = new Uint8Array(cw * ch);
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) out[y * cw + x] = m[(y + y0) * w + x + x0];
+  return { m: out, w: cw, h: ch };
+}
+function exampleMark() {
+  const c = document.createElement('canvas'); c.width = 420; c.height = 300;
+  const x = c.getContext('2d'); x.fillStyle = '#000';
+  x.beginPath(); x.moveTo(250, 10); x.lineTo(95, 170); x.lineTo(200, 170); x.lineTo(160, 290); x.lineTo(330, 115); x.lineTo(222, 115); x.closePath(); x.fill();
+  return c;
+}
+let logoCand = null;
+function buildLogoCandidates(yc, half) {
+  const taken = new Set(), out = [];
+  for (let i = 0; i < N; i++) {
+    if (!OK[i] || Math.abs(Y[i] - yc) > half) continue;
+    const key = Math.floor((Y[i] - ymin) / 4) * 4096 + Math.floor((X[i] - xmin) / 4);
+    if (taken.has(key)) continue; taken.add(key); out.push(i);
+  }
+  logoCand = Int32Array.from(out);
+}
+let pvMode = 'logo', logoImg = null, mask = null;
+function runPreview(yc) {
+  const v = makeView($('prev')), PITCH = 20, LH = 250;
+  let cols = columnsFor($('brandIn').value), t0 = null;
+  buildLogoCandidates(yc, LH / 2 + 2);
+
+  const refreshMask = () => { mask = logoMask(logoImg || exampleMark(), $('invertIn').checked); t0 = null; };
+  refreshMask();
+  const setMode = m => {
+    pvMode = m; $('pvText').setAttribute('aria-pressed', m === 'text'); $('pvLogo').setAttribute('aria-pressed', m === 'logo');
+    $('textField').hidden = m !== 'text'; $('logoField').hidden = m !== 'logo'; t0 = null; updateShare();
+  };
+  $('pvText').onclick = () => setMode('text');
+  $('pvLogo').onclick = () => setMode('logo');
+  $('brandIn').addEventListener('input', () => { cols = columnsFor($('brandIn').value); t0 = null; updateShare(); });
+  $('invertIn').addEventListener('change', refreshMask);
+  const useFile = async f => {
+    if (!f) return;
+    const img = new Image(); img.src = URL.createObjectURL(f);
+    try {
+      await img.decode(); logoImg = img; $('logoName').textContent = f.name; refreshMask();
+      if (!mask) $('logoName').textContent = "Couldn't find a shape in that image. Try Invert, or a PNG with a transparent background.";
+      try { const c = document.createElement('canvas'), k = Math.min(1, 480 / Math.max(img.width, img.height)); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); localStorage.setItem('bmf-logo', JSON.stringify({ name: f.name, url: c.toDataURL('image/png') })); } catch (e) {}
+    } catch (e) { $('logoName').textContent = "That file couldn't be read as an image. Try a PNG or JPG."; }
+  };
+  $('logoIn').addEventListener('change', e => useFile(e.target.files[0]));
+  const drop = $('logoField').querySelector('.drop');
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); useFile(e.dataTransfer.files[0]); });
+  try {
+    const saved = JSON.parse(localStorage.getItem('bmf-logo') || 'null');
+    if (saved && saved.url) { const im = new Image(); im.src = saved.url; im.decode().then(() => { logoImg = im; $('logoName').textContent = saved.name; refreshMask(); }).catch(() => {}); }
+  } catch (e) {}
+
+  const step = ts => {
+    if (onScreen(v.canvas) || t0 === null) {
+      if (t0 === null) { t0 = ts; v.A.fill(0); }
+      const brainW = xmax - xmin;
+      let W, dist;
+      if (pvMode === 'text') { W = cols.length * PITCH; }
+      else if (mask) { W = Math.min(brainW * 0.95, LH * mask.w / mask.h); }
+      else W = 0;
+      const lh = pvMode === 'logo' && mask ? W * mask.h / mask.w : LH;
+      dist = brainW + W + 34;
+      const x0 = xmax + 17, dur = Math.max(900, Math.min(3200, dist / 0.95)), vel = dist / dur;
+      const t = reduce ? dur * 0.45 : ((ts - t0) / 5 + dur * 0.4) % (dur + 120); // 5× slow, starts mid-scroll
+      for (let i = 0; i < v.A.length; i++) v.A[i] *= 0.55;
+      if (t <= dur) {
+        if (pvMode === 'text') {
+          for (const [n, r, h] of cand) {
+            const x = X[n], c = Math.round((x - x0 + vel * t) / PITCH);
+            if (c < 0 || c >= cols.length || !cols[c][r]) continue;
+            if (Math.abs(x - (x0 + c * PITCH - vel * t)) <= h) dep3(v.A, PIX[n], 1);
+          }
+        } else if (mask) {
+          const left = x0 - vel * t, top = yc - lh / 2;
+          for (let k = 0; k < logoCand.length; k++) {
+            const n = logoCand[k], u = (X[n] - left) / W; if (u < 0 || u >= 1) continue;
+            const q = (Y[n] - top) / lh; if (q < 0 || q >= 1) continue;
+            if (mask.m[Math.floor(q * mask.h) * mask.w + Math.floor(u * mask.w)]) dep2(v.A, PIX[n], 0.9);
+          }
+        }
+      }
+      paint(v, pvMode === 'text' ? 2.6 : 1.6);
+    }
+    if (!reduce) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+  setMode('logo');
+}
+
+/* ---------- the fly's mind: mind share, claims, verdicts ---------- */
+const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+const PALETTE = ['#62E2FF', '#FF8A3D', '#F2F4F8', '#D2402F', '#A99BFF', '#7FE0A0', '#FFD166'];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function renderVerdicts() {
+  const vs = CONFIG.verdicts.slice().sort((x, y) => moodOf(y).appetite - moodOf(x).appetite);
+  const top = vs[0];
+  $('approval').textContent = top ? Math.round(moodOf(top).appetite) + '%' : '–';
+  $('approvalSub').textContent = top ? `top score so far: ${top.brand}` : '';
+  const bar = (name, val, txt, color) => `<div class="vbar"><span>${name}</span><span>${txt}</span><i><span style="width:${Math.max(2, Math.min(100, val))}%;background:${color}"></span></i></div>`;
+  $('verdictList').innerHTML = vs.map((v, i) => {
+    const m = moodOf(v);
+    return `<article class="vcard${i === 0 ? ' top' : ''}"><div class="bn">${esc(v.brand)}${v.note ? `<small>${esc(v.note)}</small>` : ''}</div>
+      ${bar('Appetite · vs sugar', m.appetite, Math.round(m.appetite) + '%', '#62E2FF')}
+      ${bar('Curiosity · antennae', m.curiosity, Math.round(m.curiosity) + '%', '#FF8A3D')}
+      ${bar('Brain buzz', m.buzz * 4, `${v.neurons.toLocaleString('en-US')} neurons · ${m.buzz.toFixed(1)}%`, '#F2F4F8')}
+      <span class="vpill ${m.kind}">${MOOD_TEXT[m.kind]}</span>
+      <span class="critic">Dopamine critic: reward ${Math.round(v.reward)} Hz · punishment ${Math.round(v.punishment)} Hz. Tough crowd.</span></article>`;
+  }).join('');
+}
+function updateMsg() {
+  const brand = $('bkBrand').value.trim();
+  const lv = CLIP && CLIP.lastVerdict, v = lv ? `\nMy fly test: ${MOOD_TEXT[lv.kind].toLowerCase()} (${Math.round(lv.appetite)}% as tasty as sugar).` : '';
+  $('msg').textContent = `Hey! I'd want ${brand ? brand : 'my brand'} in the fly's mind if you build it.${v}`;
+}
+$('bkBrand').addEventListener('input', updateMsg);
+$('copyMsg').onclick = async () => {
+  const text = $('msg').textContent;
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+    const r = document.createRange(); r.selectNodeContents($('msg')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    try { ok = document.execCommand('copy'); } catch (e2) {}
+  }
+  $('toast').textContent = ok ? 'Copied. Paste it in a DM to @fulutmd.' : 'Select the message above and copy it.';
+  setTimeout(() => $('toast').textContent = '', 3500);
+};
+function updateShare() {
+  const brand = pvMode === 'logo' ? 'my logo' : ($('brandIn').value.trim() || 'my brand');
+  const v = CLIP && CLIP.lastVerdict;
+  const line = v ? `I ran ${brand} through a simulation of a real fruit fly brain. ${MOOD_TEXT[v.kind]}: ${Math.round(v.appetite)}% as tasty as sugar, ${v.neurons.toLocaleString('en-US')} neurons lit up.` : `Just watched ${brand} slide through 138,639 neurons of a simulated fruit fly brain.`;
+  $('shareX').href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(line + ' Try yours: BrandTheFly by @fulutmd') + '&url=' + encodeURIComponent(CONFIG.pageUrl);
+}
+renderVerdicts(); updateMsg(); updateShare();
+
+/* ---------- brand piece: a small live brain glowing behind the word "neurons." ---------- */
+function brainBehindWord() {
+  const cv = $('h1fx'), word = $('nword'), wrap = cv.parentElement, ctx = cv.getContext('2d');
+  let s2, W2, H2, pix, base, B, A, img, layer, lctx, dpr;
+  const place = () => {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    const cssW = cv.parentElement.clientWidth || 400;
+    W2 = Math.round(Math.min(900, cssW * dpr)); s2 = W2 / (xmax - xmin + 2 * PAD); H2 = Math.round((ymax - ymin + 2 * PAD) * s2);
+    cv.width = W2; cv.height = H2;
+    pix = new Int32Array(N).fill(-1);
+    const dens = new Float32Array(W2 * H2);
+    for (let i = 0; i < N; i++) if (OK[i]) { const q = Math.round((Y[i] - ymin + PAD) * s2) * W2 + Math.round((X[i] - xmin + PAD) * s2); pix[i] = q; dens[q]++; }
+    base = dens; let mx = 0;
+    for (let i = 0; i < base.length; i++) { base[i] = Math.log1p(base[i] * 3); if (base[i] > mx) mx = base[i]; }
+    for (let i = 0; i < base.length; i++) base[i] /= mx;
+    B = new Float32Array(W2 * H2); A = new Float32Array(W2 * H2);
+    img = ctx.createImageData(W2, H2);
+    layer = document.createElement('canvas'); layer.width = W2; layer.height = H2; lctx = layer.getContext('2d');
+  };
+  place();
+  let t0 = null, lastF = -1;
+  const SLOW = 3;
+  const frame = ts => {
+    if (t0 === null) t0 = ts;
+    let f = Math.floor(((ts - t0) / (hero.meta.bin_ms * SLOW)) % hero.F);
+    if (reduce) f = 900;
+    if (f !== lastF) {
+      if (f < lastF || lastF < 0) { A.fill(0); B.fill(0); lastF = f - 1; }
+      for (let g = Math.max(lastF + 1, f - 4); g <= f; g++) {
+        for (let i = 0; i < B.length; i++) { B[i] *= 0.6; A[i] *= 0.6; }
+        for (let k = hero.start[g]; k < hero.start[g + 1]; k++) {
+          const c = hero.codes[k], n = c < 0 ? -c - 1 : c, q = pix[n]; if (q < 0) continue;
+          if (c < 0) A[q] += 0.5; else B[q] += 1;
+        }
+      }
+      lastF = f;
+      const d = img.data;
+      for (let i = 0, q = 0; i < B.length; i++, q += 4) {
+        const bs = base[i]; let r = 5 + bs * 58, g = 7 + bs * 60, b = 12 + bs * 74;
+        if (B[i] > 0.001) { const t = 1 - Math.exp(-B[i] * 1.6); r += (255 - r) * t; g += (138 - g) * t; b += (61 - b) * t; }
+        if (A[i] > 0.001) { const t = 1 - Math.exp(-A[i] * 1.2); r += (98 - r) * t; g += (226 - g) * t; b += (255 - b) * t; }
+        d[q] = r; d[q + 1] = g; d[q + 2] = b; d[q + 3] = 255;
+      }
+      lctx.putImageData(img, 0, 0);
+      ctx.drawImage(layer, 0, 0);
+      if (hasFilter) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.filter = `blur(${Math.round(3 * dpr)}px)`; ctx.globalAlpha = 0.6; ctx.drawImage(layer, 0, 0); ctx.restore(); }
+    }
+  };
+  const loop = ts => { if (onScreen(cv)) frame(ts); if (!reduce) requestAnimationFrame(loop); };
+  frame(performance.now()); cv.classList.add('on'); requestAnimationFrame(loop);
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { place(); lastF = -1; }, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { place(); lastF = -1; });
+}
+
+/* ---------- clip maker: run the real simulation on YOUR brand, record a postable video ---------- */
+
+const clipStatus = (msg, frac) => { $('clipMsg').textContent = msg; $('clipBar').style.width = Math.round((frac || 0) * 100) + '%'; };
+const unb64 = o => { const b = atob(o.b64), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; };
+async function loadWiring() {
+  if (CLIP.wires) return CLIP.wires;
+  const files = ['counts.json', 'idx.json', 'w8.json', 'wover.json', 'groups.json'];
+  let done = 0;
+  const got = await Promise.all(files.map(f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' returned ' + r.status); return r.json(); })
+    .then(x => { done++; clipStatus('Loading the brain wiring…', 0.1 + 0.2 * done / files.length); return x; })));
+  await new Promise(r => requestAnimationFrame(() => r()));
+  const counts = new Uint32Array(unb64(got[0])), rowptr = new Uint32Array(N + 1);
+  for (let i = 0; i < N; i++) rowptr[i + 1] = rowptr[i] + counts[i];
+  const E = rowptr[N], bytes = new Uint8Array(unb64(got[1])), idx = new Uint32Array(E);
+  let p = 0;
+  for (let r = 0; r < N; r++) {
+    let prev = 0; const a = rowptr[r], b = rowptr[r + 1];
+    for (let j = a; j < b; j++) {
+      let c = bytes[p++], val = c & 127;
+      if (c & 128) { c = bytes[p++]; val |= (c & 127) << 7; if (c & 128) { c = bytes[p++]; val |= (c & 127) << 14; } }
+      prev = (j === a) ? val : prev + val; idx[j] = prev;
+    }
+  }
+  const w8 = new Int8Array(unb64(got[2])), wo = new Int16Array(unb64(got[3])), W = new Float32Array(E);
+  for (let j = 0, k = 0; j < E; j++) { let v = w8[j]; if (v === -128) v = wo[k++]; W[j] = v * 0.275; }
+  CLIP.groups = got[4];
+  CLIP.wires = { rowptr, idx, W };
+  return CLIP.wires;
+}
+function clipPlan() {
+  const yc = hero.meta.yc, BRAINW = xmax - xmin, ON0 = 200, DUR = 1600;
+  const iN = [], iS = [], iE = [];
+  const push = (n, tS, tE) => { if (tE < 0 || tS > DUR) return; iN.push(n); iS.push(ON0 + Math.round(Math.max(0, tS) * 10)); iE.push(ON0 + Math.round(Math.min(DUR, tE) * 10)); };
+  if (pvMode === 'text') {
+    const cols = columnsFor($('brandIn').value), P = 20, x0 = xmax + 17, dist = BRAINW + cols.length * P + 34, vel = dist / DUR;
+    for (const [n, r, h] of cand) {
+      const x = X[n];
+      for (let c = 0; c < cols.length; c++) if (cols[c][r]) push(n, (x0 + c * P - x - h) / vel, (x0 + c * P - x + h) / vel);
+    }
+  } else if (mask) {
+    const LH = 250, Wd = Math.min(BRAINW * 0.95, LH * mask.w / mask.h), lh = Wd * mask.h / mask.w, top = yc - lh / 2;
+    const x0 = xmax + 17, dist = BRAINW + Wd + 34, vel = dist / DUR;
+    for (let k = 0; k < logoCand.length; k++) {
+      const n = logoCand[k], q = (Y[n] - top) / lh; if (q < 0 || q >= 1) continue;
+      const row = Math.floor(q * mask.h) * mask.w, x = X[n];
+      let a = -1;
+      for (let cu = 0; cu <= mask.w; cu++) {
+        const on = cu < mask.w && mask.m[row + cu];
+        if (on && a < 0) a = cu;
+        if (!on && a >= 0) { push(n, (a / mask.w * Wd + x0 - x) / vel, (cu / mask.w * Wd + x0 - x) / vel); a = -1; }
+      }
+    }
+  }
+  return { iN: Int32Array.from(iN), iS: Int32Array.from(iS), iE: Int32Array.from(iE), steps: ON0 + DUR * 10 + 900, on: ON0, off: ON0 + DUR * 10, rate: 300 };
+}
+const STIMBIT = 1 << 30, IDXMASK = STIMBIT - 1;
+function simulateClip(pl, wires) {
+  return new Promise(resolve => {
+    const STEPS = pl.steps, DLY = 18, DT = 0.1, V0 = -52, VTH = -45, K1 = DT / 20, K2 = DT / 5;
+    const v = new Float32Array(N).fill(V0), g = new Float32Array(N), ref = new Float32Array(N), buf = new Float32Array(DLY * N);
+    const bucket = steps => { const ptr = new Uint32Array(STEPS + 2); for (const t of steps) ptr[t + 1]++; for (let t = 0; t <= STEPS; t++) ptr[t + 1] += ptr[t]; const out = new Int32Array(steps.length), fill = ptr.slice(); for (let k = 0; k < steps.length; k++) out[fill[steps[k]]++] = pl.iN[k]; return { ptr, out }; };
+    const starts = bucket(pl.iS), ends = bucket(pl.iE);
+    const drive = new Uint16Array(N), act = new Int32Array(N), actPos = new Int32Array(N);
+    let nAct = 0;
+    const pIn = pl.rate * DT / 1000, fired = new Int32Array(N);
+    const R = { spk: new Int32Array(1 << 21), stepStart: new Uint32Array(STEPS + 1), n: 0, steps: STEPS };
+    const { rowptr, idx, W } = wires;
+    let s = 0;
+    const slice = () => {
+      const t0 = performance.now();
+      while (s < STEPS && performance.now() - t0 < 30) {
+        const o = (s % DLY) * N;
+        for (let q = starts.ptr[s]; q < starts.ptr[s + 1]; q++) { const n = starts.out[q]; if (drive[n]++ === 0) { actPos[n] = nAct; act[nAct++] = n; } }
+        for (let q = ends.ptr[s]; q < ends.ptr[s + 1]; q++) { const n = ends.out[q]; if (--drive[n] === 0) { const pp = actPos[n], last = act[--nAct]; act[pp] = last; actPos[last] = pp; } }
+        for (let k = 0; k < nAct; k++) if (Math.random() < pIn) v[act[k]] += 68.75;
+        R.stepStart[s] = R.n;
+        let nf = 0;
+        for (let n = 0; n < N; n++) {
+          let gn = g[n] + buf[o + n]; buf[o + n] = 0;
+          const rn = ref[n];
+          if (rn <= 0) {
+            let vn = v[n]; vn += K1 * (V0 - vn + gn); gn -= K2 * gn;
+            if (vn > VTH) { vn = V0; gn = 0; ref[n] = drive[n] ? 0 : 2.2; fired[nf++] = n; }
+            v[n] = vn;
+          } else ref[n] = rn - DT;
+          g[n] = gn;
+        }
+        if (R.n + nf > R.spk.length) { const a = new Int32Array(R.spk.length * 2); a.set(R.spk); R.spk = a; }
+        for (let f = 0; f < nf; f++) {
+          const n = fired[f]; R.spk[R.n++] = drive[n] ? (n | STIMBIT) : n;
+          for (let j = rowptr[n], e = rowptr[n + 1]; j < e; j++) buf[o + idx[j]] += W[j];
+        }
+        s++; R.stepStart[s] = R.n;
+      }
+      clipStatus(`Simulating 138,639 neurons… ${Math.round(s / STEPS * 100)}%`, 0.3 + 0.5 * s / STEPS);
+      if (s < STEPS) requestAnimationFrame(slice); else resolve(R);
+    };
+    requestAnimationFrame(slice);
+  });
+}
+function deriveClip(R) {
+  const G = CLIP.groups, STEPS = R.steps;
+  const GK = ['DNa01_L', 'DNa01_R', 'DNa02_L', 'DNa02_R', 'MDN_L', 'MDN_R', 'GF_L', 'GF_R', 'MN9', 'proboscis_MN', 'ingest_MN', 'antenna_MN_L', 'antenna_MN_R', 'neck_MN_L', 'neck_MN_R'];
+  const bits = new Uint16Array(N); GK.forEach((k, b) => { for (const i of G[k]) bits[i] |= 1 << b; });
+  const daBit = new Uint8Array(N); for (const i of G.PAM) daBit[i] = 1; for (const i of G.PPL1) daBit[i] = 2;
+  const cumDA = [new Uint32Array(STEPS + 1), new Uint32Array(STEPS + 1)];
+  const cum = GK.map(() => new Uint32Array(STEPS + 1));
+  for (let s = 0; s < STEPS; s++) {
+    const cnt = new Uint16Array(GK.length);
+    let pa = 0, pp = 0;
+    for (let j = R.stepStart[s]; j < R.stepStart[s + 1]; j++) {
+      const code = R.spk[j], nn = code & IDXMASK, bb = bits[nn];
+      if (bb) for (let b = 0; b < GK.length; b++) if (bb & (1 << b)) cnt[b]++;
+      if (daBit[nn] && !(code & STIMBIT)) { if (daBit[nn] === 1) pa++; else pp++; }
+    }
+    cumDA[0][s + 1] = cumDA[0][s] + pa; cumDA[1][s + 1] = cumDA[1][s] + pp;
+    for (let b = 0; b < GK.length; b++) cum[b][s + 1] = cum[b][s] + cnt[b];
+  }
+  const size = GK.map(k => G[k].length), GI = Object.fromEntries(GK.map((k, b) => [k, b]));
+  const rate = (key, s) => { const b = GI[key], a = Math.max(0, s + 1 - 400); return (cum[b][s + 1] - cum[b][a]) / (size[b] * (s + 1 - a) * 0.1 / 1000 || 1); };
+  const n = Math.floor(STEPS / 10), cl = (v, a, b) => Math.max(a, Math.min(b, v));
+  const F = {}; ['x', 'y', 'h', 'ph', 'ampL', 'ampR', 'z', 'wing', 'prob', 'pump', 'antL', 'antR', 'yaw', 'walk', 'turn', 'back', 'air'].forEach(k => F[k] = new Float32Array(n + 1));
+  // neurons that have fired so far (from stimulus onset)
+  const seen = new Uint8Array(N), litAt = new Uint32Array(STEPS + 1);
+  for (let s2 = 0; s2 < STEPS; s2++) { let c = litAt[s2]; if (s2 >= 200) for (let j = R.stepStart[s2]; j < R.stepStart[s2 + 1]; j++) { const nn = R.spk[j] & IDXMASK; if (!seen[nn]) { seen[nn] = 1; c++; } } litAt[s2 + 1] = c; }
+  const avgRate = (keys, s2) => { if (s2 < 400) return 0; let tot = 0, cnt = 0; for (const key of keys) { const b = GI[key]; tot += cum[b][s2 + 1] - cum[b][200]; cnt += size[b]; } return tot / (cnt * (s2 - 200) * 0.1 / 1000); };
+  const mood = s2 => { const v = { neurons: litAt[Math.min(STEPS, s2 + 1)], appetite: avgRate(['MN9'], s2), curiosity: avgRate(['antenna_MN_L', 'antenna_MN_R'], s2) }; return { ...v, ...moodOf(v) }; };
+  let x = 0, y = 0, hd = 0, ph = 0, z = 0, wing = 0, prob = 0, yaw = 0, lastGF = -1e9;
+  for (let k = 0; k <= n; k++) {
+    const s = Math.min(k * 10, STEPS - 1);
+    const sL = rate('DNa01_L', s) + rate('DNa02_L', s), sR = rate('DNa01_R', s) + rate('DNa02_R', s);
+    const walk = cl((sL + sR) / 2 / 110, 0, 1.2), turn = cl((sL - sR) / 140, -1, 1), back = cl((rate('MDN_L', s) + rate('MDN_R', s)) / 2 / 45, 0, 1);
+    const a0 = Math.max(0, s - 9);
+    if ((cum[GI.GF_L][s + 1] - cum[GI.GF_L][a0]) + (cum[GI.GF_R][s + 1] - cum[GI.GF_R][a0]) > 0) lastGF = k;
+    const air = (k - lastGF) < 50 ? 1 : 0;
+    z += (air - z) * (air ? 0.09 : 0.045); wing += (air - wing) * (air ? 0.35 : 0.06);
+    const fwd = air ? 0 : walk - 1.4 * back, speed = air ? 30 * z : 14 * fwd;
+    hd += (air ? 0 : -5 * turn) * 0.001; x += Math.sin(hd) * speed * 0.001; y += -Math.cos(hd) * speed * 0.001;
+    const actv = air ? 0 : cl(Math.abs(fwd) + Math.abs(turn) * 0.7, 0, 1.2);
+    ph += 2 * Math.PI * 12 * actv * 0.001 * (fwd < -0.05 ? -1 : 1);
+    prob += (cl(Math.max(rate('MN9', s) / 140, rate('proboscis_MN', s) / 35), 0, 1) - prob) * 0.05;
+    yaw += (cl((rate('neck_MN_L', s) - rate('neck_MN_R', s)) / 20, -1, 1) * 0.3 - yaw) * 0.08;
+    F.x[k] = x; F.y[k] = y; F.h[k] = hd; F.ph[k] = ph; F.z[k] = z; F.wing[k] = wing; F.air[k] = air;
+    F.ampL[k] = actv * (1 - 0.7 * Math.max(0, turn)); F.ampR[k] = actv * (1 - 0.7 * Math.max(0, -turn));
+    F.prob[k] = prob; F.pump[k] = cl(rate('ingest_MN', s) / 50, 0, 1);
+    F.antL[k] = cl(rate('antenna_MN_L', s) / 30, 0, 1); F.antR[k] = cl(rate('antenna_MN_R', s) / 30, 0, 1);
+    F.yaw[k] = yaw; F.walk[k] = walk; F.turn[k] = turn; F.back[k] = back;
+  }
+  const daRate = (which, s) => { const on = 200; if (s < on + 200) return 0; return (cumDA[which][s + 1] - cumDA[which][on]) / ((which ? G.PPL1.length : G.PAM.length) * (s - on) * 0.1 / 1000); };
+  return { F, n, daRate, mood };
+}
+function chipsAt(F, k) {
+  const c = [];
+  if (F.air[k]) c.push('Escape takeoff');
+  else if (F.back[k] > 0.25) c.push('Walking backward');
+  else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) c.push('Turning left');
+  else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) c.push('Turning right');
+  else if (F.walk[k] > 0.25) c.push('Walking');
+  if (F.prob[k] > 0.3) c.push('Proboscis out');
+  if (F.pump[k] > 0.3) c.push('Swallowing');
+  if (Math.max(F.antL[k], F.antR[k]) > 0.3) c.push('Antennae twitch');
+  if (Math.abs(F.yaw[k]) > 0.08) c.push('Head turn');
+  return c;
+}
+async function recordClip(R, fly) {
+  const CW = 720, CH = 720, SECS = 11;
+  const card = document.createElement('canvas'); card.width = CW; card.height = CH;
+  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:10px;height:10px'; document.body.appendChild(card);
+  const cx = card.getContext('2d');
+  const bv = makeView(document.createElement('canvas'));
+  const label = pvMode === 'text' ? ($('brandIn').value.trim().toUpperCase() || 'YOUR BRAND') : 'MY LOGO';
+  const disp = getComputedStyle(document.body).getPropertyValue('--display') || 'sans-serif';
+  const mono = getComputedStyle(document.body).getPropertyValue('--mono') || 'monospace';
+  const drawFrame = step => {
+    // brain
+    bv.A.fill(0); bv.B.fill(0);
+    const last = Math.min(Math.floor(step), R.steps - 1);
+    for (let st = Math.max(0, last - 160); st <= last; st++) {
+      const age = last - st, wa = Math.exp(-age / 45), wb = age <= 120 ? Math.exp(-age / 40) : 0;
+      for (let j = R.stepStart[st], e = R.stepStart[st + 1]; j < e; j++) {
+        const code = R.spk[j], n = code & IDXMASK, p = PIX[n]; if (p < 0) continue;
+        if (code & STIMBIT) dep3(bv.A, p, wa); else if (wb) { bv.B[p] += wb; bv.B[p + 1] += wb * 0.6; }
+      }
+    }
+    paint(bv, 2.6, 1.4);
+    cx.fillStyle = '#05060A'; cx.fillRect(0, 0, CW, CH);
+    // header
+    cx.fillStyle = '#D2402F'; cx.beginPath(); cx.arc(28, 34, 5, 0, 6.28); cx.fill();
+    cx.fillStyle = '#F2F4F8'; cx.font = `900 30px ${disp}`; cx.textBaseline = 'middle'; cx.fillText('BRANDTHE', 42, 35);
+    const bw = cx.measureText('BRANDTHE').width; cx.fillStyle = '#62E2FF'; cx.fillText('FLY', 42 + bw + 6, 35);
+    cx.fillStyle = '#8990A0'; cx.font = `400 12px ${mono}`; cx.textAlign = 'right'; cx.fillText(`t = ${(last * 0.1).toFixed(0)} ms · real fly brain simulation`, CW - 20, 35); cx.textAlign = 'left';
+    // brain panel
+    cx.drawImage(bv.canvas, 0, 64, CW, 360);
+    cx.fillStyle = '#8990A0'; cx.font = `400 11px ${mono}`; cx.fillText('1 · YOUR BRAND, BURNED INTO 138,639 NEURONS', 18, 82);
+    // fly panel
+    const fy0 = 424, fh = 232, k = Math.min(fly.n, Math.floor(step / 10)), F = fly.F;
+    cx.save(); cx.beginPath(); cx.rect(0, fy0, CW, fh); cx.clip();
+    cx.fillStyle = '#090C13'; cx.fillRect(0, fy0, CW, fh);
+    const ppm = fh / 7.5, ccx = CW * 0.62, ccy = fy0 + fh * 0.55, fx = F.x[k], fyy = F.y[k];
+    cx.lineWidth = 1;
+    for (let gx = Math.floor(fx - ccx / ppm); gx <= fx + (CW - ccx) / ppm; gx++) { cx.strokeStyle = gx % 5 === 0 ? 'rgba(150,170,205,.15)' : 'rgba(150,170,205,.06)'; const sx = (gx - fx) * ppm + ccx; cx.beginPath(); cx.moveTo(sx, fy0); cx.lineTo(sx, fy0 + fh); cx.stroke(); }
+    for (let gy = Math.floor(fyy - (ccy - fy0) / ppm); gy <= fyy + (fy0 + fh - ccy) / ppm; gy++) { cx.strokeStyle = gy % 5 === 0 ? 'rgba(150,170,205,.15)' : 'rgba(150,170,205,.06)'; const sy = (gy - fyy) * ppm + ccy; cx.beginPath(); cx.moveTo(0, sy); cx.lineTo(CW, sy); cx.stroke(); }
+    if (k > 1) { cx.strokeStyle = 'rgba(255,138,61,.45)'; cx.lineWidth = 3; cx.lineCap = 'round'; cx.beginPath(); for (let j = 0; j <= k; j += 4) { const sx = (F.x[j] - fx) * ppm + ccx, sy = (F.y[j] - fyy) * ppm + ccy; j ? cx.lineTo(sx, sy) : cx.moveTo(sx, sy); } cx.stroke(); }
+    const st = { h: F.h[k], ph: F.ph[k], ampL: F.ampL[k], ampR: F.ampR[k], z: F.z[k], wing: F.wing[k], prob: F.prob[k], pump: F.pump[k], antL: F.antL[k], antR: F.antR[k], yaw: F.yaw[k], air: F.air[k], t: k / 1000 };
+    cx.save(); cx.translate(ccx + st.z * ppm * 0.9, ccy + st.z * ppm * 1.2); cx.rotate(st.h); cx.fillStyle = `rgba(0,0,0,${0.45 - 0.2 * st.z})`; cx.beginPath(); cx.ellipse(0, 0, ppm * 0.55, ppm * 1.35, 0, 0, 7); cx.fill(); cx.restore();
+    drawFly(cx, ccx, ccy, ppm * (1 + 0.28 * st.z), st);
+    cx.restore();
+    cx.fillStyle = '#FF8A3D'; cx.font = `900 22px ${disp}`; cx.textBaseline = 'top'; cx.fillText("2 · THE FLY'S REACTION", 18, fy0 + 14);
+    // fly mood (fun labels, real neurons)
+    { const s0 = Math.min(R.steps - 1, Math.floor(step)), md = fly.mood(s0);
+      const bx = CW - 262, by = fy0 + 12, bwid = 246;
+      cx.fillStyle = 'rgba(5,6,10,.84)'; cx.fillRect(bx, by, bwid, 122); cx.strokeStyle = '#2A3244'; cx.lineWidth = 1; cx.strokeRect(bx + .5, by + .5, bwid - 1, 121);
+      cx.fillStyle = '#8990A0'; cx.font = `500 10px ${mono}`; cx.textBaseline = 'top'; cx.fillText('FLY MOOD', bx + 10, by + 9);
+      const bar = (y, name, val, txt, color) => { cx.fillStyle = '#C9CEDA'; cx.font = `400 10px ${mono}`; cx.fillText(name, bx + 10, y); cx.textAlign = 'right'; cx.fillText(txt, bx + bwid - 10, y); cx.textAlign = 'left';
+        cx.fillStyle = '#1B2130'; cx.fillRect(bx + 10, y + 14, bwid - 20, 6); cx.fillStyle = color; cx.fillRect(bx + 10, y + 14, (bwid - 20) * Math.min(1, val / 100), 6); };
+      bar(by + 26, 'APPETITE · VS SUGAR', md.appetite, `${Math.round(md.appetite)}%`, '#62E2FF');
+      bar(by + 50, 'CURIOSITY · ANTENNAE', md.curiosity, `${Math.round(md.curiosity)}%`, '#FF8A3D');
+      bar(by + 74, 'BRAIN BUZZ', md.buzz * 4, `${md.neurons.toLocaleString('en-US')} neurons`, '#F2F4F8');
+      cx.fillStyle = md.kind === 'taste' ? '#62E2FF' : md.kind === 'noticed' ? '#F2F4F8' : '#FF8A3D'; cx.font = `900 16px ${disp}`;
+      cx.fillText(s0 < 400 ? 'FLY IS THINKING…' : MOOD_TEXT[md.kind].toUpperCase(), bx + 10, by + 102); }
+    let chx = 18; const chy = fy0 + 46; cx.font = `500 11px ${mono}`;
+    for (const c of chipsAt(F, k)) { const t = c.toUpperCase(), w = cx.measureText(t).width + 16; cx.fillStyle = 'rgba(255,138,61,.16)'; cx.fillRect(chx, chy, w, 24); cx.strokeStyle = 'rgba(255,138,61,.55)'; cx.lineWidth = 1; cx.strokeRect(chx + .5, chy + .5, w - 1, 23); cx.fillStyle = '#FFC29A'; cx.fillText(t, chx + 8, chy + 7); chx += w + 6; if (chx > 330) { break; } }
+    // footer
+    cx.textBaseline = 'middle'; cx.fillStyle = '#F2F4F8'; cx.font = `900 26px ${disp}`;
+    cx.fillText(`${label} INSIDE A FLY'S BRAIN`.slice(0, 44), 18, CH - 32);
+    cx.fillStyle = '#586072'; cx.font = `400 10px ${mono}`; cx.textAlign = 'right'; cx.fillText('try yours: BrandTheFly by @fulutmd', CW - 18, CH - 32); cx.textAlign = 'left';
+  };
+  const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const mime = window.MediaRecorder ? types.find(t => MediaRecorder.isTypeSupported(t)) : null;
+  if (!mime || !card.captureStream) { card.remove(); throw new Error('This browser cannot record video. Try Chrome or Safari on a computer.'); }
+  const rec = new MediaRecorder(card.captureStream(30), { mimeType: mime, videoBitsPerSecond: 6000000 });
+  const chunks = []; rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  const done = new Promise(r => rec.onstop = r);
+  drawFrame(0); rec.start(250);
+  await new Promise(resolve => {
+    const t0 = performance.now();
+    const tick = () => {
+      const frac = (performance.now() - t0) / (SECS * 1000);
+      drawFrame(Math.min(R.steps - 1, frac * R.steps));
+      clipStatus(`Recording your clip… ${Math.max(0, Math.ceil(SECS * (1 - frac)))} s`, 0.8 + 0.2 * Math.min(1, frac));
+      if (frac < 1) requestAnimationFrame(tick); else resolve();
+    };
+    requestAnimationFrame(tick);
+  });
+  rec.stop(); await done; card.remove();
+  return { blob: new Blob(chunks, { type: mime.split(';')[0] }), ext: mime.includes('mp4') ? 'mp4' : 'webm' };
+}
+async function makeClip() {
+  if (CLIP.busy || !hero) return;
+  if (pvMode === 'text' && !$('brandIn').value.trim()) { clipStatus('Type your brand first.', 0); return; }
+  CLIP.busy = true; $('makeClip').disabled = true; $('clipOut').hidden = false; $('clipResult').hidden = true;
+  try {
+    clipStatus('Loading the brain wiring…', 0.05);
+    const wires = await loadWiring();
+    const plan = clipPlan();
+    if (!plan.iN.length) throw new Error("Couldn't find a shape to burn in. Try another image or Invert.");
+    const R = await simulateClip(plan, wires);
+    clipStatus('Working out what the fly does…', 0.8);
+    await new Promise(r => requestAnimationFrame(() => r()));
+    const fly = deriveClip(R);
+    const out = await recordClip(R, fly);
+    if (CLIP.url) URL.revokeObjectURL(CLIP.url);
+    CLIP.blob = out.blob; CLIP.ext = out.ext; CLIP.url = URL.createObjectURL(out.blob);
+    $('clipVideo').src = CLIP.url; $('clipResult').hidden = false;
+    { const endS = Math.min(R.steps - 1, plan.off), md = fly.mood(endS);
+      CLIP.lastVerdict = { ...md, brand: pvMode === 'text' ? $('brandIn').value.trim() : 'logo' };
+      $('clipVerdict').textContent = `${MOOD_TEXT[md.kind]} · ${Math.round(md.appetite)}% as tasty as sugar · ${md.neurons.toLocaleString('en-US')} neurons lit`;
+      updateShare(); updateMsg(); }
+    clipStatus(out.ext === 'mp4' ? 'Your clip is ready.' : 'Your clip is ready (WebM). X needs MP4, so for posting try Chrome or Safari.', 1);
+  } catch (err) {
+    clipStatus(err && err.message ? err.message : "Something went wrong making the clip. Reload and try again.", 0);
+  } finally { CLIP.busy = false; $('makeClip').disabled = false; }
+}
+$('makeClip').onclick = makeClip;
+$('saveClip').onclick = async () => {
+  if (!CLIP.blob) return;
+  const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+  if (!dl) {
+    const a = document.createElement('a'); a.href = CLIP.url; a.download = `brandthefly-clip.${CLIP.ext}`; document.body.appendChild(a); a.click(); a.remove();
+    $('saveMsg').textContent = 'Downloaded. Now attach it to your post on X.'; return;
+  }
+  try { await dl.save({ filename: `brandthefly-clip.${CLIP.ext}`, data: CLIP.blob }); $('saveMsg').textContent = 'Saved. Now attach it to your post on X.'; }
+  catch (e) {
+    if (e && e.code === 'declined') $('saveMsg').textContent = 'Not saved.';
+    else if (e && e.code === 'rate_limited') $('saveMsg').textContent = 'A save prompt is already open.';
+    else $('saveMsg').textContent = 'Saving isn’t available here. Right-click the video and choose “Save video”.';
+  }
+};
+
+/* ---------- hero form: test a brand straight from the top of the page ---------- */
+$('heroForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const t = $('heroBrand').value.trim();
+  if (!t) { $('heroBrand').focus(); return; }
+  $('pvText').click();
+  $('brandIn').value = t; $('brandIn').dispatchEvent(new Event('input'));
+  document.getElementById('preview').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  const go = () => { if (hero && !CLIP.busy) makeClip(); else if (!hero) setTimeout(go, 400); };
+  setTimeout(go, reduce ? 0 : 500);
+});
+$('heroLogo').addEventListener('click', () => $('pvLogo').click());
+
+/* ---------- boot ---------- */
+(async () => {
+  try {
+    const [pos, h] = await Promise.all([fetch('pos.json').then(r => r.json()), fetch('hero.json').then(r => r.json())]);
+    const b = atob(pos.b64), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+    setupGeometry(new Uint16Array(u.buffer));
+    buildCandidates(h.meta.yc);
+    runPreview(h.meta.yc);
+    deriveFly(h);
+    hero = decodeHero(h);
+    runHero();
+    try { brainBehindWord(); } catch (err) {}
+  } catch (e) {
+    $('heroT').textContent = 'Replay unavailable. Reload to try again.';
+  }
+})();
+})();
+</script>
+
+</body>
+</html>

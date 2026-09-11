@@ -1,0 +1,8 @@
+{
+  "name": "brandthefly-pipeline",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "hyparquet": "^1.30.1"
+  }
+}

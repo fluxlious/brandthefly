@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fly Brain Billboard · BrandTheFly studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪰</text></svg>">
+</head>
+<body>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#07090E; --panel:#0D1119; --panel-2:#121824; --rule:#1C2330; --rule-2:#283143;
+  --ink:#E7EBF2; --muted:#8B94A7; --faint:#5A6376;
+  --stim:#62E2FF; --spread:#FF8A3D; --live:#F2F5FA;
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
+  --ui:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Martian Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--ground);color:var(--ink)}
+body{margin:0;font:15px/1.5 var(--ui);padding-inline:clamp(16px,2.5vw,32px);padding-block:18px 40px;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--stim);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 22px;max-width:1360px;margin:0 auto 16px}
+header.top h1{font:800 clamp(30px,3.4vw,44px)/0.95 var(--display);letter-spacing:.01em;margin:0;text-transform:uppercase}
+header.top h1 span{color:var(--stim)}
+header.top p{margin:0;color:var(--muted);font-size:14px;max-width:62ch;text-wrap:pretty}
+.specs{margin-left:auto;display:flex;gap:18px;font:400 11px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em}
+.specs b{display:block;color:var(--ink);font-weight:500;font-size:13px}
+
+main.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;max-width:1360px;margin:0 auto;align-items:start}
+@media (max-width:960px){main.grid{grid-template-columns:1fr}}
+
+/* ---------- stage ---------- */
+.stage{display:flex;flex-direction:column;gap:0;background:var(--panel);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.clip-caption{display:none}
+.scope{position:relative;background:#05070B}
+.scope canvas{display:block;width:100%;height:auto}
+.hud{position:absolute;font:400 10.5px/1.3 var(--mono);color:var(--muted);letter-spacing:.04em;pointer-events:none;text-transform:uppercase}
+.hud.tl{left:14px;top:12px}.hud.tr{right:14px;top:12px;color:var(--ink);text-transform:none;font-size:13px}
+.hud.bl{left:14px;bottom:12px;display:flex;gap:14px;flex-wrap:wrap;text-transform:none}
+.hud.br{right:14px;bottom:12px;text-align:right}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:0}
+.dot.stim{background:var(--stim);box-shadow:0 0 8px var(--stim)}.dot.spread{background:var(--spread);box-shadow:0 0 8px var(--spread)}
+.scalebar{display:inline-block;height:2px;background:var(--muted);vertical-align:middle;margin-right:6px}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,7,11,.72);text-align:center;padding:20px}
+.overlay[hidden]{display:none!important}
+.overlay .msg{font:500 13px/1.5 var(--mono);color:var(--ink);max-width:40ch}
+.bar{height:3px;width:220px;background:var(--rule-2);margin:12px auto 0;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--stim);transition:width .15s}
+.simbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:transparent}
+.simbar i{display:block;height:100%;width:0;background:var(--stim)}
+
+.transport{display:flex;align-items:center;gap:12px;padding:10px 14px;border-block:1px solid var(--rule);background:var(--panel)}
+.btn-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--rule-2);background:var(--panel-2);display:grid;place-items:center;cursor:pointer;flex:none}
+.btn-icon:hover{border-color:var(--stim)}
+.btn-icon svg{width:14px;height:14px;fill:var(--ink)}
+.track{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+input[type=range]{width:100%;appearance:none;-webkit-appearance:none;height:18px;background:transparent;cursor:pointer;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--rule-2) 0 var(--on,4%),rgba(98,226,255,.35) var(--on,4%) var(--off,64%),var(--rule-2) var(--off,64%) 100%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--rule-2) 0 var(--on,4%),rgba(98,226,255,.35) var(--on,4%) var(--off,64%),var(--rule-2) var(--off,64%) 100%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--live);margin-top:-4px;border:0}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--live);border:0}
+.ticks{display:flex;justify-content:space-between;font:400 10px/1 var(--mono);color:var(--faint)}
+
+.arena{position:relative;aspect-ratio:2.3/1;background:#0B0F16}
+.arena canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.chips{position:absolute;left:14px;top:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:70%}
+.chip{font:500 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 8px;border-radius:3px;background:rgba(255,138,61,.14);color:#FFC29A;border:1px solid rgba(255,138,61,.45)}
+.chip.calm{background:transparent;color:var(--muted);border-color:var(--rule-2)}
+
+/* ---------- panel ---------- */
+.panel{display:flex;flex-direction:column;gap:14px}
+.block{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.block h2{margin:0;font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--ground);padding:3px;border-radius:5px;border:1px solid var(--rule)}
+.tabs button{border:0;background:transparent;padding:7px 0;border-radius:3px;cursor:pointer;color:var(--muted);font-weight:500;font-size:14px}
+.tabs button[aria-selected=true]{background:var(--panel-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule-2)}
+.pane{display:flex;flex-direction:column;gap:8px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{border:1px solid var(--rule-2);background:var(--ground);border-radius:4px;padding:7px 6px;cursor:pointer;font-size:13.5px;color:var(--muted)}
+.seg button[aria-pressed=true]{border-color:var(--stim);color:var(--ink);box-shadow:inset 0 0 0 1px var(--stim)}
+.pane[hidden]{display:none!important}
+label.lbl{font-size:13px;color:var(--muted)}
+.text-in{width:100%;background:var(--ground);border:1px solid var(--rule-2);border-radius:4px;padding:8px 12px;font:800 30px/1.1 var(--display);letter-spacing:.02em;text-transform:uppercase}
+.file{display:flex;align-items:center;gap:10px;border:1px dashed var(--rule-2);border-radius:4px;padding:12px;cursor:pointer;font-size:14px;color:var(--muted)}
+.file:hover{border-color:var(--stim);color:var(--ink)}
+.file input{position:absolute;opacity:0;width:1px;height:1px}
+.check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer}
+.check input{accent-color:var(--stim)}
+.preset{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--rule-2);background:var(--ground);border-radius:4px;padding:10px 12px;cursor:pointer}
+.preset b{font-weight:600;font-size:14px}.preset small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.preset[aria-pressed=true]{border-color:var(--stim);box-shadow:inset 0 0 0 1px var(--stim)}
+.targeted{font:400 12px/1.4 var(--mono);color:var(--muted)}
+.targeted b{color:var(--stim);font-weight:500}
+.fire{border:0;border-radius:4px;padding:12px 14px;background:var(--stim);color:#021017;font:800 20px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.fire:hover{filter:brightness(1.08)}
+.fire:disabled{background:var(--rule-2);color:var(--muted);cursor:default;filter:none}
+
+.readout{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-top:1px solid var(--rule)}
+.row:first-child{border-top:0;padding-top:0}
+.row .name{font-size:13.5px;line-height:1.3}
+.row .name small{display:block;color:var(--faint);font:400 10.5px/1.4 var(--mono);letter-spacing:.02em}
+.row .val{font:500 12px/1.3 var(--mono);text-align:right;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.row .val.on{color:var(--spread)}
+.lr{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:3px;height:5px}
+.lr i{display:block;height:100%;background:var(--rule)}
+.lr i span{display:block;height:100%;background:var(--spread);width:0}
+.lr i:first-child span{margin-left:auto}
+.one{grid-column:1/-1;height:5px;background:var(--rule)}
+.one span{display:block;height:100%;width:0;background:var(--spread)}
+.dn{font:400 12px/1.5 var(--mono);color:var(--muted);padding-top:8px;border-top:1px solid var(--rule)}
+.dn b{color:var(--ink);font-weight:500}
+
+.opts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+select{background:var(--ground);border:1px solid var(--rule-2);border-radius:4px;padding:5px 8px;font-size:13.5px}
+.ghost{border:1px solid var(--rule-2);background:transparent;border-radius:4px;padding:7px 12px;cursor:pointer;font-size:13.5px}
+.ghost:hover{border-color:var(--stim)}
+details{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 16px}
+details summary{cursor:pointer;font:600 12px/1.6 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+details ul{margin:10px 0 4px;padding-left:18px;color:var(--muted);font-size:13.5px;display:flex;flex-direction:column;gap:7px}
+details li b{color:var(--ink);font-weight:600}
+details a{color:var(--stim)}
+
+/* ---------- clip frame (for screen recording) ---------- */
+.exit-clip{display:none}
+.app.clip header.top,.app.clip .panel{display:none}
+.app.clip main.grid{grid-template-columns:1fr;justify-items:center}
+.app.clip .stage{width:min(430px,100%);aspect-ratio:9/16;border-radius:10px}
+.app.clip .clip-caption{display:block;padding:18px 18px 12px;font:800 30px/1 var(--display);text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.app.clip .clip-caption small{display:block;margin-top:6px;font:400 10.5px/1.4 var(--mono);color:var(--muted);text-transform:none;letter-spacing:.02em}
+.app.clip .scope .hud.tl,.app.clip .scope .hud.br{display:none}
+.app.clip .transport{padding:6px 12px}
+.app.clip .ticks{display:none}
+.app.clip .arena{aspect-ratio:auto;flex:1}
+.app.clip .exit-clip{display:block;position:fixed;top:14px;right:14px;z-index:5}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <h1>Fly Brain <span>Billboard</span></h1>
+    <p>Write a name or drop a logo into a real fruit fly brain. The shape fires, the wiring spreads it, and the fly reacts to whatever its brain sends out.</p>
+    <div class="specs" aria-label="Model size">
+      <div><b>138,639</b>neurons</div>
+      <div><b>4.9M</b>connections</div>
+      <div><b>0.1 ms</b>time step</div>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="stage" id="stage" aria-label="Simulation">
+      <div class="clip-caption" id="clipCaption"><span id="clipText">Your logo, burned into a fly brain</span><small>138,639 real neurons (FlyWire) · simulated activity</small></div>
+      <div class="scope">
+        <canvas id="brain" aria-label="Fly brain activity, front view"></canvas>
+        <div class="hud tl">Drosophila brain · front view</div>
+        <div class="hud tr mono" id="tRead">t = 0.0 ms</div>
+        <div class="hud bl"><span><i class="dot stim"></i>stimulated by you</span><span><i class="dot spread"></i>switched on by the wiring</span></div>
+        <div class="hud br"><span class="scalebar" id="scalebar"></span>100 µm</div>
+        <div class="simbar"><i id="simbar"></i></div>
+        <div class="overlay" id="loading"><div><div class="msg" id="loadMsg">Loading brain wiring…</div><div class="bar"><i id="loadBar"></i></div></div></div>
+      </div>
+      <div class="transport">
+        <button class="btn-icon" id="playBtn" aria-label="Play"><svg viewBox="0 0 14 14" id="playIcon"><path d="M3 1.5v11l9-5.5z"/></svg></button>
+        <div class="track">
+          <input type="range" id="scrub" min="0" max="5000" value="0" step="1" aria-label="Brain time">
+          <div class="ticks"><span>0 ms</span><span id="tickStim">stimulus 20–320 ms</span><span id="tickEnd">500 ms</span></div>
+        </div>
+      </div>
+      <div class="arena" id="arenaWrap">
+        <canvas id="arena" aria-label="Fly reacting to brain output"></canvas>
+        <div class="chips" id="chips"></div>
+        <div class="hud br" id="arenaHud">grid 1 mm · 10× slow motion</div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="block">
+        <h2>Stimulus</h2>
+        <div class="tabs" role="tablist">
+          <button role="tab" id="tabText" aria-selected="true" aria-controls="paneText">Name</button>
+          <button role="tab" id="tabLogo" aria-selected="false" aria-controls="paneLogo">Logo</button>
+          <button role="tab" id="tabPreset" aria-selected="false" aria-controls="panePreset">Senses</button>
+        </div>
+        <div class="pane" id="paneText" role="tabpanel">
+          <div class="seg" role="group" aria-label="Text style">
+            <button id="styleTicker" aria-pressed="true">Sliding LED ticker</button>
+            <button id="styleStill" aria-pressed="false">Still letters</button>
+          </div>
+          <label class="lbl" for="textIn">Text to write into the brain</label>
+          <input class="text-in" id="textIn" maxlength="24" value="CEM" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="pane" id="paneLogo" role="tabpanel" hidden>
+          <label class="file" for="logoIn"><input type="file" id="logoIn" accept="image/png,image/jpeg,image/webp,image/svg+xml"><span id="logoName">Showing an example mark. Choose your logo image to replace it (PNG with a transparent background works best).</span></label>
+          <label class="check" for="invertIn"><input type="checkbox" id="invertIn"> Invert shape</label>
+        </div>
+        <div class="pane" id="panePreset" role="tabpanel" hidden>
+          <button class="preset" id="pSugar" aria-pressed="false"><b>Sugar taste</b><small>20 sugar-sensing taste neurons. Expect a clean feeding response.</small></button>
+          <button class="preset" id="pLoom" aria-pressed="false"><b>Looming shadow</b><small>314 LC4 + LPLC2 looming detectors. Expect an escape takeoff.</small></button>
+        </div>
+        <div class="targeted" id="targeted">—</div>
+        <button class="fire" id="fireBtn" disabled>Fire neurons</button>
+      </div>
+
+      <div class="block">
+        <h2>Brain outputs now</h2>
+        <div class="readout" id="readout"></div>
+        <div class="dn" id="dnLine">Descending neurons active so far: <b>0</b> of 1,299</div>
+      </div>
+
+      <div class="block">
+        <h2>Playback</h2>
+        <div class="opts">
+          <label class="check" for="speedSel">Speed
+            <select id="speedSel"><option value="3">3× slow</option><option value="5">5× slow</option><option value="10" selected>10× slow</option><option value="20">20× slow</option></select>
+          </label>
+          <label class="check" for="loopIn"><input type="checkbox" id="loopIn" checked> Loop</label>
+        </div>
+        <label class="lbl" for="captionIn">Clip caption</label>
+        <input class="text-in" id="captionIn" style="font-size:18px;text-transform:none;font-weight:600" value="Your logo, burned into a fly brain" maxlength="60">
+        <button class="ghost" id="clipBtn">Open 9:16 clip frame</button>
+      </div>
+
+      <details>
+        <summary>What's real here</summary>
+        <ul>
+          <li><b>Wiring:</b> the FlyWire connectome (v783). Connections with 3+ synapses are kept (4.9M of 15.1M); this pruned network gives the same outputs as the full one for these stimuli.</li>
+          <li><b>Neurons:</b> the leaky integrate-and-fire model from Shiu et al. 2024, same parameters. Targeted neurons get 150 Hz input from 20 to 320 ms.</li>
+          <li><b>LED ticker:</b> a 5×7 dot-matrix text slides across the brain. Neurons under a lit dot get 300 Hz input while the dot passes over them.</li>
+          <li><b>Picture:</b> every dot sits at its neuron's real position, seen from the front.</li>
+          <li><b>Fly:</b> an animation driven by output neurons, not a physics body. Steering neurons (DNa01, DNa02) set walking and turning, MDN walks it backward, giant fiber spikes launch a takeoff, and proboscis and pharynx motor neurons drive feeding.</li>
+          <li><b>The logo shape comes from you.</b> What the wiring does with it comes from the brain.</li>
+        </ul>
+        <ul>
+          <li><a href="https://flywire.ai" target="_blank" rel="noopener">FlyWire connectome</a> · <a href="https://github.com/philshiu/Drosophila_brain_model" target="_blank" rel="noopener">Shiu et al. brain model (MIT)</a></li>
+        </ul>
+      </details>
+    </aside>
+  </main>
+  <button class="ghost exit-clip" id="exitClip">Exit clip frame</button>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const N = 138639, DLY = 18, DT = 0.1, STIM = 1 << 30, IDX = STIM - 1;
+let STEPS = 5000, ON = 200, OFF = 3200;
+const V0 = -52, VTH = -45, K1 = DT / 20, K2 = DT / 5, KICK = 68.75;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let D = null;          // loaded data
+let armed = new Int32Array(0);
+let plan = null;       // what to stimulate, and when
+let ticker = true;
+let R = null;          // simulation result
+let S = null;          // derived series + fly track
+let cur = 0, playing = false, simRunning = false, lastTs = 0;
+let mode = 'text', preset = null, logoImg = null;
+
+/* ---------------- loading ---------------- */
+const setLoad = (msg, f) => { $('loadMsg').textContent = msg; $('loadBar').style.width = Math.round(f * 100) + '%'; };
+const frame = () => new Promise(r => requestAnimationFrame(() => r()));
+
+async function load() {
+  const files = ['counts.json', 'idx.json', 'w8.json', 'wover.json', 'pos.json', 'groups.json'];
+  let done = 0;
+  setLoad('Loading brain wiring…', 0.02);
+  const unpack = o => {
+    if (!o.b64) return o;
+    const bin = atob(o.b64), u = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return u.buffer;
+  };
+  const got = await Promise.all(files.map(f => fetch(f).then(r => {
+    if (!r.ok) throw new Error(f + ' returned ' + r.status);
+    return r.json();
+  }).then(x => { done++; setLoad('Loading brain wiring…', done / files.length); return unpack(x); })));
+  const [cB, iB, wB, oB, pB, groups] = got;
+  setLoad('Decoding 4.9 million connections…', 1); await frame(); await frame();
+
+  const counts = new Uint32Array(cB);
+  const rowptr = new Uint32Array(N + 1);
+  for (let i = 0; i < N; i++) rowptr[i + 1] = rowptr[i] + counts[i];
+  const E = rowptr[N];
+  const bytes = new Uint8Array(iB), idx = new Uint32Array(E);
+  let p = 0;
+  for (let r = 0; r < N; r++) {
+    let prev = 0; const a = rowptr[r], b = rowptr[r + 1];
+    for (let j = a; j < b; j++) {
+      let c = bytes[p++], val = c & 127;
+      if (c & 128) { c = bytes[p++]; val |= (c & 127) << 7; if (c & 128) { c = bytes[p++]; val |= (c & 127) << 14; } }
+      prev = (j === a) ? val : prev + val;
+      idx[j] = prev;
+    }
+  }
+  const w8 = new Int8Array(wB), wo = new Int16Array(oB), W = new Float32Array(E);
+  for (let j = 0, k = 0; j < E; j++) { let v = w8[j]; if (v === -128) v = wo[k++]; W[j] = v * 0.275; }
+
+  const pos = new Uint16Array(pB);
+  const X = new Float32Array(N), Y = new Float32Array(N), OK = new Uint8Array(N);
+  let xmin = 1e9, xmax = -1e9, ymin = 1e9, ymax = -1e9;
+  for (let i = 0; i < N; i++) {
+    const x = pos[2 * i] / 10, y = pos[2 * i + 1] / 10;
+    if (x > 0) { OK[i] = 1; X[i] = x; Y[i] = y; if (x < xmin) xmin = x; if (x > xmax) xmax = x; if (y < ymin) ymin = y; if (y > ymax) ymax = y; }
+  }
+  D = { rowptr, idx, W, X, Y, OK, xmin, xmax, ymin, ymax, groups };
+  setupBrainCanvas();
+  buildShape();
+  buildGroups();
+}
+
+/* ---------------- brain canvas ---------------- */
+const SC = 1.5, PAD = 18;
+let BW, BH, PIX, base, layA, layB, bctx, bImg, layerCanvas, lctx;
+function setupBrainCanvas() {
+  BW = Math.round((D.xmax - D.xmin + 2 * PAD) * SC); BH = Math.round((D.ymax - D.ymin + 2 * PAD) * SC);
+  const c = $('brain'); c.width = BW; c.height = BH;
+  bctx = c.getContext('2d');
+  layerCanvas = document.createElement('canvas'); layerCanvas.width = BW; layerCanvas.height = BH;
+  lctx = layerCanvas.getContext('2d');
+  bImg = lctx.createImageData(BW, BH);
+  PIX = new Int32Array(N).fill(-1);
+  const dens = new Float32Array(BW * BH);
+  for (let i = 0; i < N; i++) if (D.OK[i]) {
+    const px = Math.round((D.X[i] - D.xmin + PAD) * SC), py = Math.round((D.Y[i] - D.ymin + PAD) * SC);
+    PIX[i] = py * BW + px; dens[PIX[i]] += 1;
+  }
+  base = boxBlur(boxBlur(dens, BW, BH), BW, BH);
+  let mx = 0; for (let i = 0; i < base.length; i++) { base[i] = Math.log1p(base[i] * 6); if (base[i] > mx) mx = base[i]; }
+  for (let i = 0; i < base.length; i++) base[i] /= mx;
+  layA = new Float32Array(BW * BH); layB = new Float32Array(BW * BH);
+  $('scalebar').style.width = (100 * SC / BW * $('brain').clientWidth || 60) + 'px';
+}
+function boxBlur(src, w, h) {
+  const tmp = new Float32Array(src.length), out = new Float32Array(src.length);
+  for (let y = 0; y < h; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; tmp[i] = (src[i - 1] + src[i] + src[i + 1]) / 3; }
+  for (let y = 1; y < h - 1; y++) for (let x = 0; x < w; x++) { const i = y * w + x; out[i] = (tmp[i - w] + tmp[i] + tmp[i + w]) / 3; }
+  return out;
+}
+const hasFilter = (() => { try { const c = document.createElement('canvas').getContext('2d'); return typeof c.filter === 'string'; } catch (e) { return false; } })();
+
+function renderBrain(step) {
+  if (!D) return;
+  layA.fill(0); layB.fill(0);
+  if (R) {
+    const last = Math.min(Math.floor(step), R.done - 1);
+    const tauA = R.mode === 'ticker' ? 45 : 150, winA = R.mode === 'ticker' ? 160 : 400;
+    for (let st = Math.max(0, last - winA); st <= last; st++) {
+      const age = last - st, wa = Math.exp(-age / tauA), wb = age <= 120 ? Math.exp(-age / 40) : 0;
+      for (let j = R.stepStart[st], e = R.stepStart[st + 1]; j < e; j++) {
+        const code = R.spk[j], n = code & IDX, p = PIX[n]; if (p < 0) continue;
+        if (code & STIM) { layA[p] += wa; layA[p + 1] += wa; layA[p + BW] += wa; layA[p + BW + 1] += wa; }
+        else if (wb) { layB[p] += wb; layB[p + 1] += wb * 0.6; }
+      }
+    }
+  }
+  if (!R || (step < ON && !simRunning)) for (let k = 0; k < armed.length; k++) { const p = PIX[armed[k]]; if (p >= 0) { layA[p] += 0.5; layA[p + 1] += 0.5; layA[p + BW] += 0.5; layA[p + BW + 1] += 0.5; } }
+  const aGain = R && R.mode === 'ticker' ? 2.2 : 1.1;
+  const d = bImg.data;
+  for (let i = 0, q = 0; i < layA.length; i++, q += 4) {
+    const bs = base[i];
+    let r = 5 + bs * 34, g = 7 + bs * 34, b = 11 + bs * 42;
+    const B = layB[i], A = layA[i];
+    if (B > 0) { const t = 1 - Math.exp(-B * 1.6); r += (255 - r) * t; g += (138 - g) * t; b += (61 - b) * t; }
+    if (A > 0) { const t = 1 - Math.exp(-A * aGain); r += (98 - r) * t; g += (226 - g) * t; b += (255 - b) * t; }
+    d[q] = r; d[q + 1] = g; d[q + 2] = b; d[q + 3] = 255;
+  }
+  lctx.putImageData(bImg, 0, 0);
+  bctx.globalCompositeOperation = 'source-over'; bctx.filter = 'none'; bctx.globalAlpha = 1;
+  bctx.drawImage(layerCanvas, 0, 0);
+  if (hasFilter) { bctx.globalCompositeOperation = 'lighter'; bctx.filter = 'blur(5px)'; bctx.globalAlpha = 0.55; bctx.drawImage(layerCanvas, 0, 0); bctx.filter = 'none'; bctx.globalAlpha = 1; bctx.globalCompositeOperation = 'source-over'; }
+}
+
+/* ---------------- stimulus shapes ---------------- */
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+let ORDER = null;
+function selectFromMask(mask, mw, mh) {
+  if (!ORDER) { ORDER = new Int32Array(N); for (let i = 0; i < N; i++) ORDER[i] = i; const rnd = mulberry(7); for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = ORDER[i]; ORDER[i] = ORDER[j]; ORDER[j] = t; } }
+  const CELL = 4, gw = Math.ceil(mw / CELL) + 1, taken = new Uint8Array(gw * (Math.ceil(mh / CELL) + 1));
+  const out = [];
+  for (let k = 0; k < N; k++) {
+    const i = ORDER[k]; if (!D.OK[i]) continue;
+    const mx = Math.floor(D.X[i] - D.xmin), my = Math.floor(D.Y[i] - D.ymin);
+    if (mx < 0 || my < 0 || mx >= mw || my >= mh || !mask[my * mw + mx]) continue;
+    const c = Math.floor(my / CELL) * gw + Math.floor(mx / CELL);
+    if (taken[c]) continue; taken[c] = 1; out.push(i);
+  }
+  return Int32Array.from(out).sort();
+}
+function maskCanvas() {
+  const mw = Math.ceil(D.xmax - D.xmin) + 1, mh = Math.ceil(D.ymax - D.ymin) + 1;
+  const c = document.createElement('canvas'); c.width = mw; c.height = mh;
+  return { c, ctx: c.getContext('2d', { willReadFrequently: true }), mw, mh };
+}
+
+/* Fit shapes inside the brain's real outline, not its bounding box. */
+const CELL = 4;
+let SHAPE = null, GW = 0, GH = 0;
+function buildShape() {
+  const mw = Math.ceil(D.xmax - D.xmin) + 1, mh = Math.ceil(D.ymax - D.ymin) + 1;
+  GW = Math.ceil(mw / CELL); GH = Math.ceil(mh / CELL);
+  let occ = new Uint8Array(GW * GH);
+  for (let i = 0; i < N; i++) if (D.OK[i]) occ[Math.floor((D.Y[i] - D.ymin) / CELL) * GW + Math.floor((D.X[i] - D.xmin) / CELL)] = 1;
+  const morph = (src, r, dilate) => {
+    const out = new Uint8Array(src.length);
+    for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) {
+      let v = dilate ? 0 : 1;
+      for (let dy = -r; dy <= r && (dilate ? !v : v); dy++) for (let dx = -r; dx <= r; dx++) {
+        const yy = y + dy, xx = x + dx;
+        const s = (yy < 0 || xx < 0 || yy >= GH || xx >= GW) ? 0 : src[yy * GW + xx];
+        if (dilate && s) { v = 1; break; }
+        if (!dilate && !s) { v = 0; break; }
+      }
+      out[y * GW + x] = v;
+    }
+    return out;
+  };
+  occ = morph(morph(occ, 2, true), 2, false);
+  SHAPE = occ;
+}
+// draw(ctx, unit, cx, cy, variant): draws the candidate at `unit` px per µm, centred on (cx, cy)
+function fitInBrain(draw, scales, variants) {
+  const pw = GW * 2, ph = GH * 2;
+  const c = document.createElement('canvas'); c.width = pw; c.height = ph;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  const offs = [];
+  for (let oy = -0.3; oy <= 0.301; oy += 0.05) for (let ox = -0.25; ox <= 0.251; ox += 0.05) offs.push([Math.round(ox * GW), Math.round(oy * GH)]);
+  for (const sc of scales) {
+    let best = null;
+    for (const variant of variants) {
+      ctx.clearRect(0, 0, pw, ph); ctx.fillStyle = '#fff';
+      draw(ctx, sc / CELL, pw / 2, ph / 2, variant);
+      const px = ctx.getImageData(0, 0, pw, ph).data;
+      const pts = [];
+      for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) if (px[4 * (y * pw + x) + 3] > 110) pts.push(x - pw / 2 + GW / 2, y - ph / 2 + GH / 2);
+      const n = pts.length / 2; if (n < 12) continue;
+      for (const [dx, dy] of offs) {
+        let hit = 0;
+        for (let k = 0; k < pts.length; k += 2) {
+          const x = (pts[k] + dx) | 0, y = (pts[k + 1] + dy) | 0;
+          if (x >= 0 && y >= 0 && x < GW && y < GH && SHAPE[y * GW + x]) hit++;
+        }
+        const cov = hit / n;
+        if (!best || cov > best.cov || (cov === best.cov && n > best.n)) best = { cov, n, sc, variant, dx, dy };
+      }
+    }
+    if (best && best.cov >= 0.95) return best;
+    if (sc === scales[scales.length - 1]) return best;
+  }
+  return null;
+}
+function renderFit(draw, fit) {
+  const { ctx, mw, mh } = maskCanvas();
+  ctx.fillStyle = '#fff';
+  draw(ctx, fit.sc, mw / 2 + fit.dx * CELL, mh / 2 + fit.dy * CELL, fit.variant);
+  return { px: ctx.getImageData(0, 0, mw, mh).data, mw, mh };
+}
+const FAM = '"Big Shoulders Display","Arial Narrow",sans-serif';
+function drawTextShape(text) {
+  const probe = document.createElement('canvas').getContext('2d');
+  probe.font = `800 100px ${FAM}`;
+  const m = probe.measureText(text);
+  const capH = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 72;
+  return (ctx, unit, cx, cy, track) => {
+    // unit = px per µm; letter height in µm is fixed per call via `unit` scale of a 300 µm reference
+    const fontPx = 100 * (300 * unit) / capH;
+    ctx.font = `800 ${fontPx}px ${FAM}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const chars = [...text], ws = chars.map(ch => ctx.measureText(ch).width), gap = track * fontPx;
+    const total = ws.reduce((x, y) => x + y, 0) + gap * (chars.length - 1);
+    const mm = ctx.measureText(text);
+    let x = cx - total / 2; const y = cy + (mm.actualBoundingBoxAscent - mm.actualBoundingBoxDescent) / 2;
+    chars.forEach((ch, i) => { ctx.fillText(ch, x, y); x += ws[i] + gap; });
+  };
+}
+const SCALES = [1.25, 1.15, 1.06, 0.98, 0.9, 0.83, 0.76, 0.7, 0.64, 0.58, 0.52, 0.46, 0.4, 0.34, 0.28, 0.22, 0.16];
+function armText(text) {
+  text = text.trim().toUpperCase();
+  if (!text) return new Int32Array(0);
+  const draw = drawTextShape(text);
+  const fit = fitInBrain(draw, SCALES, text.length > 1 ? [0, 0.12, 0.3, 0.55, 0.85] : [0]);
+  if (!fit) return new Int32Array(0);
+  const { px, mw, mh } = renderFit(draw, fit);
+  const mask = new Uint8Array(mw * mh);
+  for (let i = 0; i < mask.length; i++) mask[i] = px[4 * i + 3] > 110 ? 1 : 0;
+  return selectFromMask(mask, mw, mh);
+}
+function logoAlpha(img, invert) {
+  // Turn any logo into a white-on-transparent silhouette canvas.
+  const w = Math.min(600, img.width), h = Math.round(img.height * w / img.width);
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, h), px = d.data;
+  let transp = 0; for (let i = 3; i < px.length; i += 4) if (px[i] < 200) transp++;
+  const alphaMode = transp / (w * h) > 0.03;
+  const corner = (x, y) => { const q = 4 * (y * w + x); return [px[q], px[q + 1], px[q + 2]]; };
+  const cs = [corner(0, 0), corner(w - 1, 0), corner(0, h - 1), corner(w - 1, h - 1)];
+  const bg = [0, 1, 2].map(k => (cs[0][k] + cs[1][k] + cs[2][k] + cs[3][k]) / 4);
+  for (let q = 0; q < px.length; q += 4) {
+    let on = alphaMode ? px[q + 3] > 128 : Math.hypot(px[q] - bg[0], px[q + 1] - bg[1], px[q + 2] - bg[2]) > 80;
+    if (invert) on = !on;
+    px[q] = px[q + 1] = px[q + 2] = 255; px[q + 3] = on ? 255 : 0;
+  }
+  ctx.putImageData(d, 0, 0);
+  return c;
+}
+function armLogo(img, invert) {
+  const sil = logoAlpha(img, invert);
+  const draw = (ctx, unit, cx, cy) => {
+    // reference size: logo's longer side = 380 µm at scale 1
+    const k = 380 * unit / Math.max(sil.width, sil.height);
+    const w = sil.width * k, h = sil.height * k;
+    ctx.drawImage(sil, cx - w / 2, cy - h / 2, w, h);
+  };
+  const fit = fitInBrain(draw, SCALES.concat([0.12]), [0]);
+  if (!fit) return new Int32Array(0);
+  const { px, mw, mh } = renderFit(draw, fit);
+  const mask = new Uint8Array(mw * mh);
+  for (let i = 0; i < mask.length; i++) mask[i] = px[4 * i + 3] > 128 ? 1 : 0;
+  return selectFromMask(mask, mw, mh);
+}
+const FONT57 = {"A":"01110100011000111111100011000110001","B":"11110100011000111110100011000111110","C":"01110100011000010000100001000101110","D":"11100100101000110001100011001011100","E":"11111100001000011110100001000011111","F":"11111100001000011110100001000010000","G":"01110100011000010111100011000101111","H":"10001100011000111111100011000110001","I":"01110001000010000100001000010001110","J":"00111000100001000010000101001001100","K":"10001100101010011000101001001010001","L":"10000100001000010000100001000011111","M":"10001110111010110101100011000110001","N":"10001100011100110101100111000110001","O":"01110100011000110001100011000101110","P":"11110100011000111110100001000010000","Q":"01110100011000110001101011001001101","R":"11110100011000111110101001001010001","S":"01111100001000001110000010000111110","T":"11111001000010000100001000010000100","U":"10001100011000110001100011000101110","V":"10001100011000110001100010101000100","W":"10001100011000110101101011010101010","X":"10001100010101000100010101000110001","Y":"10001100011000101010001000010000100","Z":"11111000010001000100010001000011111","0":"01110100011001110101110011000101110","1":"00100011000010000100001000010001110","2":"01110100010000100010001000100011111","3":"11111000100010000010000011000101110","4":"00010001100101010010111110001000010","5":"11111100001111000001000011000101110","6":"00110010001000011110100011000101110","7":"11111000010001000100010000100001000","8":"01110100011000101110100011000101110","9":"01110100011000101111000010001001100","!":"00100001000010000100001000000000100","?":"01110100010000100010001000000000100",".":"00000000000000000000000000110001100","-":"00000000000000011111000000000000000","&":"01100100101010001000101011001001101","'":"01100001000100000000000000000000000",":":"00000011000110000000011000110000000","/":"00000000010001000100010001000000000","+":"00000001000010011111001000010000000","#":"01010010101111101010111110101001010","@":"01110100011011110101101111000001111"," ":"00000000000000000000000000000000000"};
+function planStill(arr) {
+  return { mode: 'still', neurons: arr, preview: arr, count: arr.length, steps: 5000, on: 200, off: 3200, rate: 150,
+    label: arr.length ? `<b>${arr.length.toLocaleString('en-US')}</b> neurons targeted` : '' };
+}
+function planTicker(raw) {
+  const text = raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/\u0131/g, 'I').trim();
+  if (!text) return planStill(new Int32Array(0));
+  const PITCH = 30, RAD = 13, ON0 = 200;
+  const cols = [];
+  for (const ch of text) {
+    const g = FONT57[ch] || FONT57[' '];
+    for (let c = 0; c < 5; c++) cols.push([0, 1, 2, 3, 4, 5, 6].map(r => g[r * 5 + c] === '1'));
+    cols.push([0, 0, 0, 0, 0, 0, 0].map(() => false));
+  }
+  // vertical placement: the 7-row band that crosses the most brain
+  const rowOcc = new Float32Array(GH);
+  for (let gy = 0; gy < GH; gy++) { let c = 0; for (let gx = 0; gx < GW; gx++) c += SHAPE[gy * GW + gx]; rowOcc[gy] = c; }
+  let yc = (D.ymin + D.ymax) / 2, bestScore = -1;
+  for (let y = D.ymin + 3 * PITCH + RAD; y <= D.ymax - 3 * PITCH - RAD; y += 4) {
+    let sc = 0;
+    for (let r = 0; r < 7; r++) { const yr = y + (r - 3) * PITCH; for (let gy = Math.floor((yr - RAD - D.ymin) / CELL); gy <= Math.floor((yr + RAD - D.ymin) / CELL); gy++) if (gy >= 0 && gy < GH) sc += rowOcc[gy]; }
+    if (sc > bestScore) { bestScore = sc; yc = y; }
+  }
+  const textW = cols.length * PITCH, brainW = D.xmax - D.xmin;
+  const x0 = D.xmax + RAD + 4;
+  const dist = brainW + textW + 2 * RAD + 8;
+  const dur = Math.max(600, Math.min(2200, dist / 2));
+  const vel = dist / dur; // µm per ms
+  // one neuron per 4 µm cell inside the panel rows
+  if (!ORDER) selectFromMask(new Uint8Array(1), 1, 1);
+  const taken = new Uint8Array(GW * GH);
+  const iN = [], iS = [], iE = [];
+  for (let k = 0; k < N; k++) {
+    const i = ORDER[k]; if (!D.OK[i]) continue;
+    const y = D.Y[i], r = Math.round((y - yc) / PITCH) + 3; if (r < 0 || r > 6) continue;
+    const dy = y - (yc + (r - 3) * PITCH); if (Math.abs(dy) > RAD) continue;
+    const cell = Math.min(GH - 1, Math.floor((y - D.ymin) / CELL)) * GW + Math.min(GW - 1, Math.floor((D.X[i] - D.xmin) / CELL));
+    if (taken[cell]) continue; taken[cell] = 1;
+    const h = Math.sqrt(RAD * RAD - dy * dy), x = D.X[i];
+    for (let c = 0; c < cols.length; c++) {
+      if (!cols[c][r]) continue;
+      const tS = (x0 + c * PITCH - x - h) / vel, tE = (x0 + c * PITCH - x + h) / vel;
+      if (tE < 0 || tS > dur) continue;
+      iN.push(i); iS.push(ON0 + Math.round(Math.max(0, tS) * 10)); iE.push(ON0 + Math.round(Math.min(dur, tE) * 10));
+    }
+  }
+  const off = ON0 + Math.round(dur * 10);
+  const tMid = Math.max(0, Math.min(dur, (x0 + textW / 2 - PITCH / 2 - (D.xmin + D.xmax) / 2) / vel));
+  const sMid = ON0 + Math.round(tMid * 10);
+  const prev = new Set(), all = new Set();
+  for (let k = 0; k < iN.length; k++) { all.add(iN[k]); if (iS[k] <= sMid && sMid < iE[k]) prev.add(iN[k]); }
+  return { mode: 'ticker', iN: Int32Array.from(iN), iS: Int32Array.from(iS), iE: Int32Array.from(iE),
+    preview: Int32Array.from(prev), count: all.size, steps: off + 1500, on: ON0, off, rate: 300,
+    label: `<b>${all.size.toLocaleString('en-US')}</b> neurons in the LED panel · ${(dur / 1000).toFixed(1)} s scroll` };
+}
+let EXAMPLE = null;
+function exampleMark() {
+  // Neutral placeholder: a simple lightning bolt, replaced as soon as a logo is uploaded.
+  if (EXAMPLE) return EXAMPLE;
+  const c = document.createElement('canvas'); c.width = 420; c.height = 300;
+  const x = c.getContext('2d'); x.fillStyle = '#000';
+  x.beginPath(); x.moveTo(250, 10); x.lineTo(95, 170); x.lineTo(200, 170); x.lineTo(160, 290); x.lineTo(330, 115); x.lineTo(222, 115); x.closePath(); x.fill();
+  EXAMPLE = c; return c;
+}
+function rearm() {
+  if (!D) return;
+  if (mode === 'text') plan = ticker ? planTicker($('textIn').value) : planStill(armText($('textIn').value));
+  else if (mode === 'logo') plan = planStill(armLogo(logoImg || exampleMark(), $('invertIn').checked));
+  else plan = planStill(preset ? Int32Array.from(D.groups[preset]) : new Int32Array(0));
+  armed = plan.preview;
+  $('targeted').innerHTML = plan.count ? plan.label : (mode === 'logo' ? 'Choose an image to target neurons' : mode === 'preset' ? 'Pick a sense to stimulate' : 'Type something to target neurons');
+  $('fireBtn').disabled = !plan.count || simRunning;
+  if (!simRunning) $('fireBtn').textContent = 'Fire neurons';
+  if (!simRunning) { R = null; S = null; cur = 0; STEPS = plan.steps; ON = plan.on; OFF = plan.off; setTimeline(); setPlaying(false); drawAll(); }
+}
+function setTimeline() {
+  const sc = $('scrub'); sc.max = STEPS;
+  sc.style.setProperty('--on', (ON / STEPS * 100) + '%'); sc.style.setProperty('--off', (OFF / STEPS * 100) + '%');
+  $('tickStim').textContent = `stimulus ${ON * DT}–${Math.round(OFF * DT)} ms`;
+  $('tickEnd').textContent = `${Math.round(STEPS * DT)} ms`;
+}
+
+/* ---------------- simulation ---------------- */
+function runSim() {
+  if (!plan || !plan.count || simRunning) return;
+  simRunning = true; setPlaying(false);
+  const pl = plan; STEPS = pl.steps; ON = pl.on; OFF = pl.off; setTimeline();
+  S = null; lastChips = ''; cur = 0; renderArena(0); updateReadout(0);
+  $('fireBtn').disabled = true;
+  const v = new Float32Array(N).fill(V0), g = new Float32Array(N), ref = new Float32Array(N), buf = new Float32Array(DLY * N);
+  // stimulus schedule: each entry drives neuron iN from step iS until step iE
+  let iN = pl.iN, iS = pl.iS, iE = pl.iE;
+  if (pl.mode === 'still') { iN = pl.neurons; iS = new Int32Array(iN.length).fill(ON); iE = new Int32Array(iN.length).fill(OFF); }
+  const bucket = (steps) => { const ptr = new Uint32Array(STEPS + 2); for (const t of steps) ptr[t + 1]++; for (let t = 0; t <= STEPS; t++) ptr[t + 1] += ptr[t]; const out = new Int32Array(steps.length), fill = ptr.slice(); steps.forEach((t, k) => out[fill[t]++] = iN[k]); return { ptr, out }; };
+  const starts = bucket(iS), ends = bucket(iE);
+  const drive = new Uint16Array(N), act = new Int32Array(N), actPos = new Int32Array(N);
+  let nAct = 0;
+  const pIn = pl.rate * DT / 1000;
+  R = { spk: new Int32Array(1 << 20), stepStart: new Uint32Array(STEPS + 1), mode: pl.mode, done: 0, n: 0 };
+  const fired = new Int32Array(N);
+  const { rowptr, idx, W } = D;
+  let s = 0;
+  const slice = () => {
+    const t0 = performance.now();
+    while (s < STEPS && performance.now() - t0 < 26) {
+      const o = (s % DLY) * N;
+      for (let q = starts.ptr[s]; q < starts.ptr[s + 1]; q++) { const n = starts.out[q]; if (drive[n]++ === 0) { actPos[n] = nAct; act[nAct++] = n; } }
+      for (let q = ends.ptr[s]; q < ends.ptr[s + 1]; q++) { const n = ends.out[q]; if (--drive[n] === 0) { const pp = actPos[n], last = act[--nAct]; act[pp] = last; actPos[last] = pp; } }
+      for (let k = 0; k < nAct; k++) if (Math.random() < pIn) v[act[k]] += KICK;
+      R.stepStart[s] = R.n;
+      let nf = 0;
+      for (let n = 0; n < N; n++) {
+        let gn = g[n] + buf[o + n]; buf[o + n] = 0;
+        const rn = ref[n];
+        if (rn <= 0) {
+          let vn = v[n]; vn += K1 * (V0 - vn + gn); gn -= K2 * gn;
+          if (vn > VTH) { vn = V0; gn = 0; ref[n] = drive[n] ? 0 : 2.2; fired[nf++] = n; }
+          v[n] = vn;
+        } else ref[n] = rn - DT;
+        g[n] = gn;
+      }
+      if (R.n + nf > R.spk.length) { const a = new Int32Array(R.spk.length * 2); a.set(R.spk); R.spk = a; }
+      for (let f = 0; f < nf; f++) {
+        const n = fired[f]; R.spk[R.n++] = drive[n] ? (n | STIM) : n;
+        for (let j = rowptr[n], e = rowptr[n + 1]; j < e; j++) buf[o + idx[j]] += W[j];
+      }
+      s++; R.stepStart[s] = R.n; R.done = s;
+    }
+    $('simbar').style.width = (s / STEPS * 100) + '%';
+    $('fireBtn').textContent = `Simulating… ${Math.round(s / STEPS * 100)}%`;
+    cur = s - 1; renderBrain(cur); updateTime(cur);
+    if (s < STEPS) requestAnimationFrame(slice);
+    else finishSim();
+  };
+  requestAnimationFrame(slice);
+}
+function finishSim() {
+  simRunning = false;
+  $('simbar').style.width = '0';
+  $('fireBtn').textContent = 'Fire again'; $('fireBtn').disabled = !(plan && plan.count);
+  derive();
+  cur = 0; drawAll();
+  if (!reduceMotion) setPlaying(true);
+}
+
+/* ---------------- outputs → behavior ---------------- */
+const GK = ['DNa01_L', 'DNa01_R', 'DNa02_L', 'DNa02_R', 'MDN_L', 'MDN_R', 'GF_L', 'GF_R', 'MN9', 'proboscis_MN', 'ingest_MN', 'antenna_MN_L', 'antenna_MN_R', 'neck_MN_L', 'neck_MN_R'];
+let GBITS, DNMASK;
+function buildGroups() {
+  GBITS = new Uint16Array(N);
+  GK.forEach((k, b) => { for (const i of D.groups[k]) GBITS[i] |= (1 << b); });
+  DNMASK = new Uint8Array(N); for (const i of D.groups.DN_all) DNMASK[i] = 1;
+}
+function derive() {
+  const cum = GK.map(() => new Uint32Array(STEPS + 1));
+  const first = new Int32Array(N).fill(-1);
+  const dnAt = new Uint16Array(STEPS);
+  for (let s = 0; s < STEPS; s++) {
+    const cnt = new Uint16Array(GK.length);
+    for (let j = R.stepStart[s]; j < R.stepStart[s + 1]; j++) {
+      const n = R.spk[j] & IDX, bits = GBITS[n];
+      if (first[n] < 0) { first[n] = s; if (DNMASK[n]) dnAt[s]++; }
+      if (bits) for (let b = 0; b < GK.length; b++) if (bits & (1 << b)) cnt[b]++;
+    }
+    for (let b = 0; b < GK.length; b++) cum[b][s + 1] = cum[b][s] + cnt[b];
+  }
+  for (let s = 1; s < STEPS; s++) dnAt[s] += dnAt[s - 1];
+  const size = GK.map(k => D.groups[k].length);
+  const rate = (b, s, win = 400) => { const a = Math.max(0, s + 1 - win); return (cum[b][s + 1] - cum[b][a]) / (size[b] * (s + 1 - a) * DT / 1000 || 1); };
+  const G = Object.fromEntries(GK.map((k, b) => [k, b]));
+  const n = Math.floor(STEPS / 10);
+  const F = {}; ['x', 'y', 'h', 'ph', 'ampL', 'ampR', 'z', 'wing', 'prob', 'pump', 'antL', 'antR', 'yaw', 'walk', 'turn', 'back', 'air'].forEach(k => F[k] = new Float32Array(n + 1));
+  const rates = {}; GK.forEach(k => rates[k] = new Float32Array(n + 1));
+  let x = 0, y = 0, h = 0, ph = 0, z = 0, wing = 0, prob = 0, lastGF = -1e9, yaw = 0;
+  const cl = (v, a, b) => Math.max(a, Math.min(b, v));
+  for (let k = 0; k <= n; k++) {
+    const s = Math.min(k * 10, STEPS - 1);
+    GK.forEach((key, b) => rates[key][k] = rate(b, s));
+    const sL = rates.DNa01_L[k] + rates.DNa02_L[k], sR = rates.DNa01_R[k] + rates.DNa02_R[k];
+    const walk = cl((sL + sR) / 2 / 110, 0, 1.2), turn = cl((sL - sR) / 140, -1, 1);
+    const back = cl((rates.MDN_L[k] + rates.MDN_R[k]) / 2 / 45, 0, 1);
+    const a0 = Math.max(0, s - 9);
+    if ((cum[G.GF_L][s + 1] - cum[G.GF_L][a0]) + (cum[G.GF_R][s + 1] - cum[G.GF_R][a0]) > 0) lastGF = k;
+    const air = (k - lastGF) < 50 ? 1 : 0;
+    z += (air - z) * (air ? 0.09 : 0.045);
+    wing += (air - wing) * (air ? 0.35 : 0.06);
+    const fwd = air ? 0 : walk - 1.4 * back;
+    const speed = air ? 30 * z : 14 * fwd;
+    const om = air ? 0 : -5 * turn;
+    h += om * 0.001; x += Math.sin(h) * speed * 0.001; y += -Math.cos(h) * speed * 0.001;
+    const act = air ? 0 : cl(Math.abs(fwd) + Math.abs(turn) * 0.7, 0, 1.2);
+    ph += 2 * Math.PI * 12 * act * 0.001 * (fwd < -0.05 ? -1 : 1);
+    prob += (cl(Math.max(rates.MN9[k] / 140, rates.proboscis_MN[k] / 35), 0, 1) - prob) * 0.05;
+    yaw += (cl((rates.neck_MN_L[k] - rates.neck_MN_R[k]) / 20, -1, 1) * 0.3 - yaw) * 0.08;
+    F.x[k] = x; F.y[k] = y; F.h[k] = h; F.ph[k] = ph; F.z[k] = z; F.wing[k] = wing; F.air[k] = air;
+    F.ampL[k] = act * (1 - 0.7 * Math.max(0, turn)); F.ampR[k] = act * (1 - 0.7 * Math.max(0, -turn));
+    F.prob[k] = prob; F.pump[k] = cl(rates.ingest_MN[k] / 50, 0, 1);
+    F.antL[k] = cl(rates.antenna_MN_L[k] / 30, 0, 1); F.antR[k] = cl(rates.antenna_MN_R[k] / 30, 0, 1);
+    F.yaw[k] = yaw; F.walk[k] = walk; F.turn[k] = turn; F.back[k] = back;
+  }
+  S = { F, rates, dnAt, n };
+}
+
+/* ---------------- arena / fly ---------------- */
+const actx = $('arena').getContext('2d');
+function sizeArena() {
+  const c = $('arena'), dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = Math.round(c.clientWidth * dpr), h = Math.round(c.clientHeight * dpr);
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  if (D) $('scalebar').style.width = (100 * SC / BW * $('brain').clientWidth) + 'px';
+}
+function renderArena(step) {
+  const c = $('arena'), ctx = actx, Wc = c.width, Hc = c.height;
+  if (!Wc || !Hc) return;
+  const F = S && S.F, k = S ? Math.min(S.n, Math.floor(step / 10)) : 0;
+  const fx = F ? F.x[k] : 0, fy = F ? F.y[k] : 0;
+  const ppm = Math.min(Hc / 9.5, Wc / 15);
+  const cx = Wc / 2, cy = Hc * 0.55;
+  ctx.fillStyle = '#0B0F16'; ctx.fillRect(0, 0, Wc, Hc);
+  const x0 = fx - cx / ppm, x1 = fx + (Wc - cx) / ppm, y0 = fy - cy / ppm, y1 = fy + (Hc - cy) / ppm;
+  ctx.lineWidth = Math.max(1, ppm / 60);
+  for (let gx = Math.floor(x0); gx <= x1; gx++) { ctx.strokeStyle = gx % 5 === 0 ? 'rgba(150,170,205,.16)' : 'rgba(150,170,205,.07)'; const sx = (gx - fx) * ppm + cx; ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, Hc); ctx.stroke(); }
+  for (let gy = Math.floor(y0); gy <= y1; gy++) { ctx.strokeStyle = gy % 5 === 0 ? 'rgba(150,170,205,.16)' : 'rgba(150,170,205,.07)'; const sy = (gy - fy) * ppm + cy; ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(Wc, sy); ctx.stroke(); }
+  if (F && k > 1) {
+    ctx.strokeStyle = 'rgba(255,138,61,.45)'; ctx.lineWidth = Math.max(1.5, ppm / 26); ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let j = 0; j <= k; j += 4) { const sx = (F.x[j] - fx) * ppm + cx, sy = (F.y[j] - fy) * ppm + cy; j ? ctx.lineTo(sx, sy) : ctx.moveTo(sx, sy); }
+    ctx.stroke();
+  }
+  const st = F ? { h: F.h[k], ph: F.ph[k], ampL: F.ampL[k], ampR: F.ampR[k], z: F.z[k], wing: F.wing[k], prob: F.prob[k], pump: F.pump[k], antL: F.antL[k], antR: F.antR[k], yaw: F.yaw[k], air: F.air[k], t: step * DT / 1000 }
+    : { h: 0, ph: 0, ampL: 0, ampR: 0, z: 0, wing: 0, prob: 0, pump: 0, antL: 0, antR: 0, yaw: 0, air: 0, t: 0 };
+  // shadow
+  ctx.save(); ctx.translate(cx + st.z * ppm * 0.9, cy + st.z * ppm * 1.2); ctx.rotate(st.h);
+  ctx.fillStyle = `rgba(0,0,0,${0.45 - 0.2 * st.z})`; ctx.beginPath(); ctx.ellipse(0, 0, ppm * 0.55, ppm * 1.35, 0, 0, 7); ctx.fill(); ctx.restore();
+  drawFly(ctx, cx, cy, ppm * (1 + 0.28 * st.z), st);
+}
+function ell(ctx, x, y, rx, ry, rot = 0) { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); }
+function drawFly(ctx, sx, sy, s, st) {
+  ctx.save(); ctx.translate(sx, sy); ctx.rotate(st.h); ctx.scale(s, s);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // legs
+  const legs = [
+    [-1, -0.62, -1.0, -1.55, 0], [-1, -0.42, -1.42, -0.32, 1], [-1, -0.2, -1.12, 0.9, 0],
+    [1, -0.62, 1.0, -1.55, 1], [1, -0.42, 1.42, -0.32, 0], [1, -0.2, 1.12, 0.9, 1]];
+  const tuck = Math.min(1, st.z * 1.4);
+  for (const [side, ay, fxn, fyn, tri] of legs) {
+    const amp = side < 0 ? st.ampL : st.ampR, p = st.ph + tri * Math.PI;
+    const ax = side * 0.3;
+    let fx = fxn, fy = fyn + amp * 0.3 * Math.cos(p);
+    const swing = amp > 0.05 && Math.sin(p) > 0;
+    fx = fx + (ax * 1.6 - fx) * tuck * 0.55; fy = fy + (ay - fy) * tuck * 0.45;
+    const mx = (ax + fx) / 2 + side * 0.28, my = (ay + fy) / 2 - 0.12;
+    ctx.strokeStyle = swing ? '#8A6536' : '#5E3F1C'; ctx.lineWidth = 0.075;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(mx, my); ctx.lineTo(fx, fy); ctx.stroke();
+    ctx.fillStyle = '#3C2912'; ell(ctx, fx, fy, 0.05, 0.05); ctx.fill();
+  }
+  // proboscis
+  if (st.prob > 0.02) {
+    const L = 0.1 + st.prob * 0.5 + st.pump * 0.05 * Math.sin(st.t * 2 * Math.PI * 8);
+    ctx.save(); ctx.translate(0, -0.82); ctx.rotate(st.yaw);
+    ctx.strokeStyle = '#6E4820'; ctx.lineWidth = 0.13; ctx.beginPath(); ctx.moveTo(0, -0.35); ctx.lineTo(0, -0.35 - L); ctx.stroke();
+    ctx.fillStyle = '#8C5E2A'; ell(ctx, 0, -0.38 - L, 0.12, 0.08); ctx.fill(); ctx.restore();
+  }
+  // abdomen
+  ell(ctx, 0, 0.62, 0.46, 0.84); ctx.fillStyle = '#B38447'; ctx.fill();
+  ctx.save(); ell(ctx, 0, 0.62, 0.46, 0.84); ctx.clip(); ctx.fillStyle = 'rgba(52,32,14,.88)';
+  for (const by of [0.2, 0.5, 0.8, 1.1, 1.36]) ctx.fillRect(-0.6, by, 1.2, by > 1 ? 0.2 : 0.13);
+  ctx.restore();
+  // thorax
+  ell(ctx, 0, -0.38, 0.44, 0.52); ctx.fillStyle = '#8E602A'; ctx.fill();
+  ctx.fillStyle = 'rgba(255,220,160,.10)'; ell(ctx, -0.1, -0.5, 0.18, 0.3, -0.3); ctx.fill();
+  // head
+  ctx.save(); ctx.translate(0, -0.82); ctx.rotate(st.yaw);
+  ell(ctx, 0, -0.2, 0.36, 0.28); ctx.fillStyle = '#7C5224'; ctx.fill();
+  for (const side of [-1, 1]) {
+    ell(ctx, side * 0.25, -0.2, 0.16, 0.24, side * 0.2); ctx.fillStyle = '#B7342A'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,190,170,.35)'; ell(ctx, side * 0.21, -0.28, 0.05, 0.07); ctx.fill();
+    const tw = (side < 0 ? st.antL : st.antR) * 0.35 * Math.sin(st.t * 2 * Math.PI * 14 + side);
+    ctx.save(); ctx.translate(side * 0.08, -0.44); ctx.rotate(side * (0.35 + tw));
+    ctx.strokeStyle = '#6A4520'; ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -0.18); ctx.stroke();
+    ctx.strokeStyle = 'rgba(120,85,45,.9)'; ctx.lineWidth = 0.02; ctx.beginPath(); ctx.moveTo(0, -0.18); ctx.lineTo(side * 0.08, -0.42); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+  // wings
+  const drawWing = (side, ang, alpha) => {
+    ctx.save(); ctx.translate(side * 0.12, -0.22); ctx.rotate(-side * ang);
+    ell(ctx, 0, 0.95, 0.36, 0.98); ctx.fillStyle = `rgba(205,222,245,${0.2 * alpha})`; ctx.fill();
+    ctx.strokeStyle = `rgba(225,235,250,${0.5 * alpha})`; ctx.lineWidth = 0.02; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 0.05); ctx.lineTo(-side * 0.05, 1.8); ctx.moveTo(0, 0.1); ctx.lineTo(side * 0.2, 1.65); ctx.stroke();
+    ctx.restore();
+  };
+  for (const side of [-1, 1]) {
+    const ang = 0.14 + st.wing * 1.05;
+    if (st.air > 0 && st.wing > 0.6) { for (const o of [-0.45, -0.15, 0.15, 0.45]) drawWing(side, ang + o, 0.55); }
+    else drawWing(side, ang, 1);
+  }
+  ctx.restore();
+}
+
+/* ---------------- readout ---------------- */
+const ROWS = [
+  { id: 'steer', name: 'Steering', sub: 'DNa01 + DNa02 · walk & turn', lr: ['DNa01_L', 'DNa02_L', 'DNa01_R', 'DNa02_R'], max: 300 },
+  { id: 'gf', name: 'Escape', sub: 'giant fiber · takeoff', lr: ['GF_L', null, 'GF_R', null], max: 200 },
+  { id: 'mdn', name: 'Backward walking', sub: 'MDN (moonwalker)', lr: ['MDN_L', null, 'MDN_R', null], max: 150 },
+  { id: 'prob', name: 'Proboscis', sub: 'MN9 + proboscis motor neurons', one: ['MN9', 'proboscis_MN'], max: 200 },
+  { id: 'pump', name: 'Swallowing', sub: 'pharynx pump motor neurons', one: ['ingest_MN'], max: 120 },
+  { id: 'ant', name: 'Antennae', sub: 'antennal motor neurons', lr: ['antenna_MN_L', null, 'antenna_MN_R', null], max: 80 },
+  { id: 'neck', name: 'Head turn', sub: 'neck motor neurons', lr: ['neck_MN_L', null, 'neck_MN_R', null], max: 60 },
+];
+function buildReadout() {
+  $('readout').innerHTML = ROWS.map(r => `<div class="row"><div class="name">${r.name}<small>${r.sub}</small></div><div class="val" id="v_${r.id}">—</div>${r.lr ? `<div class="lr"><i><span id="bl_${r.id}"></span></i><i><span id="br_${r.id}"></span></i></div>` : `<div class="one"><span id="b1_${r.id}"></span></div>`}</div>`).join('');
+}
+let lastChips = '';
+function updateReadout(step) {
+  const k = S ? Math.min(S.n, Math.floor(step / 10)) : 0;
+  const rt = key => (S && key) ? S.rates[key][k] : 0;
+  for (const r of ROWS) {
+    const el = $('v_' + r.id);
+    if (r.lr) {
+      const L = rt(r.lr[0]) + rt(r.lr[1]), Rr = rt(r.lr[2]) + rt(r.lr[3]);
+      el.textContent = `L ${Math.round(L)} · R ${Math.round(Rr)} Hz`;
+      el.classList.toggle('on', L + Rr > 1);
+      $('bl_' + r.id).style.width = Math.min(100, L / r.max * 100) + '%';
+      $('br_' + r.id).style.width = Math.min(100, Rr / r.max * 100) + '%';
+    } else {
+      const v = Math.max(...r.one.map(rt));
+      el.textContent = `${Math.round(v)} Hz`; el.classList.toggle('on', v > 1);
+      $('b1_' + r.id).style.width = Math.min(100, v / r.max * 100) + '%';
+    }
+  }
+  $('dnLine').innerHTML = `Descending neurons active so far: <b>${S ? S.dnAt[Math.min(Math.floor(step), STEPS - 1)] : 0}</b> of 1,299`;
+  const chips = [];
+  if (S) {
+    const F = S.F;
+    if (F.air[k]) chips.push('Escape takeoff');
+    else {
+      if (F.back[k] > 0.25) chips.push('Walking backward');
+      else if (F.turn[k] > 0.25 && F.walk[k] > 0.1) chips.push('Turning left');
+      else if (F.turn[k] < -0.25 && F.walk[k] > 0.1) chips.push('Turning right');
+      else if (F.walk[k] > 0.25) chips.push('Walking');
+    }
+    if (F.prob[k] > 0.3) chips.push('Proboscis out');
+    if (F.pump[k] > 0.3) chips.push('Swallowing');
+    if (Math.max(F.antL[k], F.antR[k]) > 0.3) chips.push('Antennae twitch');
+    if (Math.abs(F.yaw[k]) > 0.08) chips.push('Head turn');
+  }
+  const html = chips.length ? chips.map(c => `<span class="chip">${c}</span>`).join('') : `<span class="chip calm">${simRunning ? 'Simulating brain…' : S ? 'Still' : 'Waiting for a stimulus'}</span>`;
+  if (html !== lastChips) { $('chips').innerHTML = html; lastChips = html; }
+}
+function updateTime(step) {
+  $('tRead').textContent = `t = ${(Math.max(0, step) * DT).toFixed(1)} ms`;
+  $('scrub').value = Math.max(0, Math.floor(step));
+}
+function drawAll() { renderBrain(cur); sizeArena(); renderArena(cur); updateReadout(cur); updateTime(cur); }
+
+/* ---------------- playback ---------------- */
+function setPlaying(p) {
+  playing = p && !!S;
+  $('playBtn').setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  $('playIcon').innerHTML = playing ? '<path d="M3 1.5h3v11H3zM8 1.5h3v11H8z"/>' : '<path d="M3 1.5v11l9-5.5z"/>';
+  lastTs = 0;
+}
+function tick(ts) {
+  if (playing && S && !simRunning) {
+    if (lastTs) {
+      const slow = +$('speedSel').value;
+      cur += (ts - lastTs) / slow * 10;
+      if (cur >= STEPS - 1) { if ($('loopIn').checked) cur = 0; else { cur = STEPS - 1; setPlaying(false); } }
+    }
+    lastTs = ts;
+    drawAll();
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------------- wiring up UI ---------------- */
+function selectTab(m) {
+  mode = m;
+  [['text', 'tabText', 'paneText'], ['logo', 'tabLogo', 'paneLogo'], ['preset', 'tabPreset', 'panePreset']].forEach(([k, t, p]) => {
+    $(t).setAttribute('aria-selected', k === m); $(p).hidden = k !== m;
+  });
+  rearm();
+}
+$('tabText').onclick = () => selectTab('text');
+$('tabLogo').onclick = () => selectTab('logo');
+$('tabPreset').onclick = () => selectTab('preset');
+let debounce;
+$('textIn').addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(rearm, 120); });
+$('invertIn').addEventListener('change', rearm);
+$('logoIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const img = new Image(); img.src = URL.createObjectURL(f);
+  try {
+    await img.decode(); logoImg = img; $('logoName').textContent = f.name + ' (remembered in this browser)';
+    try { const c = document.createElement('canvas'), k = Math.min(1, 600 / Math.max(img.width, img.height)); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); localStorage.setItem('fbb-logo', JSON.stringify({ name: f.name, url: c.toDataURL('image/png') })); } catch (e) {}
+  }
+  catch (err) { logoImg = null; $('logoName').textContent = "That file couldn't be read as an image. Try a PNG or JPG."; }
+  rearm();
+});
+for (const [id, key] of [['pSugar', 'sugar_GRN'], ['pLoom', 'loom']]) $(id).onclick = () => {
+  preset = key; $('pSugar').setAttribute('aria-pressed', key === 'sugar_GRN'); $('pLoom').setAttribute('aria-pressed', key === 'loom'); rearm();
+};
+$('fireBtn').onclick = runSim;
+const setStyle = t => { ticker = t; $('styleTicker').setAttribute('aria-pressed', t); $('styleStill').setAttribute('aria-pressed', !t); $('textIn').maxLength = t ? 24 : 10; if (!t && $('textIn').value.length > 10) $('textIn').value = $('textIn').value.slice(0, 10); rearm(); };
+$('styleTicker').onclick = () => setStyle(true);
+$('styleStill').onclick = () => setStyle(false);
+$('playBtn').onclick = () => { if (!S) return; if (!playing && cur >= STEPS - 1) cur = 0; setPlaying(!playing); };
+$('scrub').addEventListener('input', e => { if (simRunning) return; cur = +e.target.value; setPlaying(false); drawAll(); });
+$('speedSel').addEventListener('change', () => { $('arenaHud').textContent = `grid 1 mm · ${$('speedSel').value}× slow motion`; });
+$('captionIn').addEventListener('input', e => { $('clipText').textContent = e.target.value; });
+$('clipBtn').onclick = () => { $('app').classList.add('clip'); requestAnimationFrame(drawAll); };
+$('exitClip').onclick = () => { $('app').classList.remove('clip'); requestAnimationFrame(drawAll); };
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !/INPUT|SELECT|TEXTAREA|BUTTON/.test(document.activeElement.tagName)) { e.preventDefault(); $('playBtn').click(); }
+  if (e.key === 'Escape') $('exitClip').click();
+});
+new ResizeObserver(() => { sizeArena(); renderArena(cur); if (D) $('scalebar').style.width = (100 * SC / BW * $('brain').clientWidth) + 'px'; }).observe($('arenaWrap'));
+
+buildReadout(); sizeArena(); renderArena(0); updateReadout(0);
+requestAnimationFrame(tick);
+(async () => {
+  try {
+    await Promise.race([document.fonts.load('800 100px "Big Shoulders Display"'), new Promise(r => setTimeout(r, 2500))]);
+    await load();
+    try {
+      const saved = JSON.parse(localStorage.getItem('fbb-logo') || 'null');
+      if (saved && saved.url) { const im = new Image(); im.src = saved.url; await im.decode(); logoImg = im; $('logoName').textContent = saved.name + ' (remembered in this browser)'; }
+    } catch (e) {}
+    $('loading').hidden = true;
+    rearm();
+    drawAll();
+    setTimeout(runSim, 300);
+  } catch (err) {
+    $('loadMsg').textContent = `Couldn't load the brain data (${err.message}). Reload the page to try again.`;
+  }
+})();
+})();
+</script>
+
+</body>
+</html>
