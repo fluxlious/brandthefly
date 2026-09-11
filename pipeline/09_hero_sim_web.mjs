@@ -144,7 +144,9 @@ KEYS.forEach((k, b) => {
 });
 const gfc = new Uint16Array(nf);
 for (let f = 0; f < nf; f++) { const e = Math.min(STEPS, (f + 1) * BIN); for (let s = f * BIN; s < e; s++) gfc[f] += cc[KEYS.indexOf('GF_L')][s] + cc[KEYS.indexOf('GF_R')][s]; }
-const meta = { bin_ms: BIN / 10, frames: nf, on_ms: ON0 / 10, off_ms: OFF / 10, steps: STEPS, yc: +yc.toFixed(2), dur: DUR };
+const seenAll = new Uint8Array(N); let recruited = 0;
+for (let s = ON0; s < STEPS; s++) for (let j = stepStart[s]; j < stepStart[s + 1]; j++) { const n = spk[j] & IDXMASK; if (!seenAll[n] && !stimSet.has(n)) { seenAll[n] = 1; recruited++; } }
+const meta = { bin_ms: BIN / 10, frames: nf, on_ms: ON0 / 10, off_ms: OFF / 10, steps: STEPS, yc: +yc.toFixed(2), dur: DUR, text: TEXT, stim_neurons: stimSet.size, recruited };
 fs.writeFileSync(OUT, JSON.stringify({ meta, counts: Buffer.from(frameCounts.buffer).toString('base64'), b64: Buffer.from(Uint8Array.from(code)).toString('base64'), rates, gf: Buffer.from(gfc.buffer).toString('base64') }));
 say(`wrote ${OUT}: ${JSON.stringify(meta)}`);
 
