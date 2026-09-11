@@ -34,7 +34,7 @@ brandthefly/
     ├── 09_hero_sim_web.mjs       re-simulates the hero replay from docs/*.json alone (no raw download)
     ├── simlib.py                 the brain model (leaky integrate-and-fire, Shiu et al. parameters)
     ├── font57.json / .txt        5×7 LED dot-matrix font
-    └── extras/name_snapshot/     the very first "CEM" brain snapshot + GIF
+    └── extras/name_snapshot/     scripts for the very first "CEM" brain snapshot (outputs not committed)
 ```
 
 ## Run the site locally
@@ -99,3 +99,7 @@ It prints the fly-mood numbers for the run; paste them into `CONFIG.verdicts` in
 - Brain wiring: FlyWire connectome (Dorkenwald et al. 2024, Nature; Schlegel et al. 2024, Nature), CC BY 4.0.
 - Neuron model: Shiu et al. 2024, Nature, [philshiu/Drosophila_brain_model](https://github.com/philshiu/Drosophila_brain_model) (MIT).
 - Parquet reading: [hyparquet](https://github.com/hyparam/hyparquet) (MIT).
+
+## License and attribution
+
+Code (the site and the pipeline) is MIT, see `LICENSE`. The data files in `docs/` are derived from the [FlyWire](https://flywire.ai) connectome (CC BY 4.0; Dorkenwald et al. 2024, Schlegel et al. 2024). The neuron model follows [Shiu et al. 2024](https://github.com/philshiu/Drosophila_brain_model) (MIT). If you reuse the data files, keep that attribution.

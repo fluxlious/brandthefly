@@ -27,7 +27,7 @@
 <style>
 :root{
   --void:#05060A; --deck:#0B0E15; --deck-2:#11151F; --line:#1B2130; --line-2:#2A3244;
-  --ink:#F2F4F8; --dim:#8990A0; --faint:#586072;
+  --ink:#F2F4F8; --dim:#8990A0; --faint:#737B8E;
   --logo:#62E2FF; --react:#FF8A3D; --eye:#D2402F;
   --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
   --ui:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -301,7 +301,7 @@ footer a{color:var(--dim)}
           <input class="input big" id="heroBrand" maxlength="24" placeholder="YOUR BRAND" autocomplete="off" spellcheck="false">
           <button class="btn primary" type="submit">Burn it in</button>
         </form>
-        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · nothing leaves your browser. <b>Soon:</b> rent minutes in its mind, <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a>.</p>
+        <p class="note">or <a href="#preview" id="heroLogo">upload your logo</a> · free · about 30 seconds · your logo never leaves your browser. <b>Soon:</b> rent minutes in its mind, <a href="https://x.com/fulutmd" target="_blank" rel="noopener">DM @fulutmd</a>.</p>
       </div>
       <figure class="brainbadge">
         <canvas id="h1fx" aria-label="BRANDTHEFLY sliding through a simulated fly brain"></canvas>
@@ -424,7 +424,7 @@ footer a{color:var(--dim)}
 
   <footer>
     <span>BrandTheFly · an experiment by <a href="https://x.com/fulutmd" target="_blank" rel="noopener">@fulutmd</a> · inspired by BrandMyMac</span>
-    <span>Brain data: <a href="https://flywire.ai" target="_blank" rel="noopener">FlyWire connectome</a> · Model: <a href="https://github.com/philshiu/Drosophila_brain_model" target="_blank" rel="noopener">Shiu et al. 2024</a></span>
+    <span>Brain data: <a href="https://flywire.ai" target="_blank" rel="noopener">FlyWire connectome</a> (CC BY 4.0 · Dorkenwald et al. 2024, Schlegel et al. 2024) · Model: <a href="https://github.com/philshiu/Drosophila_brain_model" target="_blank" rel="noopener">Shiu et al. 2024</a> (MIT) · <a href="https://github.com/fluxlious/brandthefly" target="_blank" rel="noopener">source</a></span>
   </footer>
 </div>
 
@@ -446,6 +446,7 @@ const CONFIG = {
 /* ======================== */
 
 const $ = id => document.getElementById(id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const N = 138639;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -463,7 +464,7 @@ const MOOD_TEXT = { taste: 'The fly wants a taste', intrigued: 'The fly is intri
 (() => {
   const byA = CONFIG.verdicts.slice().sort((a, b) => moodOf(b).appetite - moodOf(a).appetite)[0];
   const byC = CONFIG.verdicts.slice().sort((a, b) => moodOf(b).curiosity - moodOf(a).curiosity)[0];
-  const lead = byA && moodOf(byA).appetite >= 1 ? `Tastiest so far: ${byA.brand} <em>${Math.round(moodOf(byA).appetite)}% as tasty as sugar</em>` : byC ? `Most curious so far: ${byC.brand} <em>${Math.round(moodOf(byC).curiosity)}% curiosity</em>` : '';
+  const lead = byA && moodOf(byA).appetite >= 1 ? `Tastiest so far: ${esc(byA.brand)} <em>${Math.round(moodOf(byA).appetite)}% as tasty as sugar</em>` : byC ? `Most curious so far: ${esc(byC.brand)} <em>${Math.round(moodOf(byC).curiosity)}% curiosity</em>` : '';
   const items = [
     '<strong>138,639</strong> neurons', lead,
     "Even a fly's brain is <em>ad space</em> now", 'Fly turned <em>hard left</em>', 'Antennae <em>twitching</em>', 'Head <em>turning</em>', '<strong>17,105</strong> neurons joined in', 'Made by <strong>@fulutmd</strong>'
@@ -806,7 +807,7 @@ function runPreview(yc) {
     if (!f) return;
     const img = new Image(); img.src = URL.createObjectURL(f);
     try {
-      await img.decode(); logoImg = img; $('logoName').textContent = f.name; refreshMask();
+      await img.decode(); URL.revokeObjectURL(img.src); if (!img.width || !img.height) throw new Error('empty'); logoImg = img; $('logoName').textContent = f.name; refreshMask();
       if (!mask) $('logoName').textContent = "Couldn't find a shape in that image. Try Invert, or a PNG with a transparent background.";
       try { const c = document.createElement('canvas'), k = Math.min(1, 480 / Math.max(img.width, img.height)); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); localStorage.setItem('bmf-logo', JSON.stringify({ name: f.name, url: c.toDataURL('image/png') })); } catch (e) {}
     } catch (e) { $('logoName').textContent = "That file couldn't be read as an image. Try a PNG or JPG."; }
@@ -862,7 +863,6 @@ function runPreview(yc) {
 const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
 const PALETTE = ['#62E2FF', '#FF8A3D', '#F2F4F8', '#D2402F', '#A99BFF', '#7FE0A0', '#FFD166'];
-const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function renderVerdicts() {
   const vs = CONFIG.verdicts.slice().sort((x, y) => (moodOf(y).appetite - moodOf(x).appetite) || (moodOf(y).curiosity - moodOf(x).curiosity));
   const top = vs[0], tasty = top && moodOf(top).appetite >= 1;
@@ -1208,7 +1208,8 @@ async function recordClip(R, fly) {
   return { blob: new Blob(chunks, { type: mime.split(';')[0] }), ext: mime.includes('mp4') ? 'mp4' : 'webm' };
 }
 async function makeClip() {
-  if (CLIP.busy || !hero) return;
+  if (CLIP.busy) return;
+  if (!hero) { $('clipOut').hidden = false; $('clipResult').hidden = true; clipStatus('Still loading the brain… try again in a moment.', 0.02); return; }
   if (pvMode === 'text' && !$('brandIn').value.trim()) { clipStatus('Type your brand first.', 0); return; }
   CLIP.busy = true; $('makeClip').disabled = true; $('clipOut').hidden = false; $('clipResult').hidden = true;
   try {
@@ -1234,19 +1235,10 @@ async function makeClip() {
   } finally { CLIP.busy = false; $('makeClip').disabled = false; }
 }
 $('makeClip').onclick = makeClip;
-$('saveClip').onclick = async () => {
+$('saveClip').onclick = () => {
   if (!CLIP.blob) return;
-  const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
-  if (!dl) {
-    const a = document.createElement('a'); a.href = CLIP.url; a.download = `brandthefly-clip.${CLIP.ext}`; document.body.appendChild(a); a.click(); a.remove();
-    $('saveMsg').textContent = 'Downloaded. Now attach it to your post on X.'; return;
-  }
-  try { await dl.save({ filename: `brandthefly-clip.${CLIP.ext}`, data: CLIP.blob }); $('saveMsg').textContent = 'Saved. Now attach it to your post on X.'; }
-  catch (e) {
-    if (e && e.code === 'declined') $('saveMsg').textContent = 'Not saved.';
-    else if (e && e.code === 'rate_limited') $('saveMsg').textContent = 'A save prompt is already open.';
-    else $('saveMsg').textContent = 'Saving isn’t available here. Right-click the video and choose “Save video”.';
-  }
+  const a = document.createElement('a'); a.href = CLIP.url; a.download = `brandthefly-clip.${CLIP.ext}`; document.body.appendChild(a); a.click(); a.remove();
+  $('saveMsg').textContent = /iPhone|iPad/.test(navigator.userAgent) ? 'If the video opened instead of saving, tap Share on it and choose Save Video.' : 'Downloaded. Now attach it to your post on X.';
 };
 
 /* ---------- hero form: test a brand straight from the top of the page ---------- */
@@ -1285,7 +1277,9 @@ function heroContext() {
     hero = decodeHero(h);
     heroContext();
     runHero();
-    fetch('badge.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(b => brainBehindWord(decodeHero(b))).catch(() => { try { brainBehindWord(hero); } catch (err) {} });
+    const badge = document.querySelector('.brainbadge'), saveData = navigator.connection && navigator.connection.saveData;
+    if (saveData) badge.hidden = true;
+    else fetch('badge.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(b => brainBehindWord(decodeHero(b))).catch(() => { badge.hidden = true; });
   } catch (e) {
     $('heroT').textContent = 'Replay unavailable. Reload to try again.';
   }

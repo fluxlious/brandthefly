@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fly Brain Billboard · BrandTheFly studio</title>
+<meta name="description" content="The BrandTheFly studio: write a name or drop a logo into a real simulated fruit fly brain (138,639 neurons), watch the wiring spread it, and see what the fly does. Full readouts and a 9:16 clip frame.">
+<link rel="canonical" href="https://fluxlious.github.io/brandthefly/studio.html">
+<meta property="og:title" content="Fly Brain Billboard · BrandTheFly studio">
+<meta property="og:description" content="Write a name or drop a logo into a real simulated fruit fly brain and watch what the fly does. Full readouts, 9:16 clip frame.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fluxlious.github.io/brandthefly/studio.html">
+<meta property="og:image" content="https://fluxlious.github.io/brandthefly/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@fulutmd">
+<meta name="twitter:title" content="Fly Brain Billboard · BrandTheFly studio">
+<meta name="twitter:description" content="Write a name or drop a logo into a real simulated fruit fly brain and watch what the fly does.">
+<meta name="twitter:image" content="https://fluxlious.github.io/brandthefly/preview.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪰</text></svg>">
 </head>
 <body>
@@ -14,7 +26,7 @@
 <style>
 :root{
   --ground:#07090E; --panel:#0D1119; --panel-2:#121824; --rule:#1C2330; --rule-2:#283143;
-  --ink:#E7EBF2; --muted:#8B94A7; --faint:#5A6376;
+  --ink:#E7EBF2; --muted:#8B94A7; --faint:#737B8E;
   --stim:#62E2FF; --spread:#FF8A3D; --live:#F2F5FA;
   --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
   --ui:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -929,11 +941,11 @@ $('logoIn').addEventListener('change', async e => {
   const f = e.target.files[0]; if (!f) return;
   const img = new Image(); img.src = URL.createObjectURL(f);
   try {
-    await img.decode(); logoImg = img; $('logoName').textContent = f.name + ' (remembered in this browser)';
+    await img.decode(); URL.revokeObjectURL(img.src); if (!img.width || !img.height) throw new Error('empty'); logoImg = img; $('logoName').textContent = f.name + ' (remembered in this browser)';
     try { const c = document.createElement('canvas'), k = Math.min(1, 600 / Math.max(img.width, img.height)); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); localStorage.setItem('fbb-logo', JSON.stringify({ name: f.name, url: c.toDataURL('image/png') })); } catch (e) {}
   }
   catch (err) { logoImg = null; $('logoName').textContent = "That file couldn't be read as an image. Try a PNG or JPG."; }
-  rearm();
+  try { rearm(); } catch (err) { logoImg = null; $('logoName').textContent = 'No usable shape in that image. Try a PNG with a transparent background.'; rearm(); }
 });
 for (const [id, key] of [['pSugar', 'sugar_GRN'], ['pLoom', 'loom']]) $(id).onclick = () => {
   preset = key; $('pSugar').setAttribute('aria-pressed', key === 'sugar_GRN'); $('pLoom').setAttribute('aria-pressed', key === 'loom'); rearm();
@@ -967,7 +979,8 @@ requestAnimationFrame(tick);
     $('loading').hidden = true;
     rearm();
     drawAll();
-    setTimeout(runSim, 300);
+    // phones and data-saver users press Fire themselves; everyone else gets the demo run
+    if (!(matchMedia('(max-width:700px)').matches || (navigator.connection && navigator.connection.saveData))) setTimeout(runSim, 300);
   } catch (err) {
     $('loadMsg').textContent = `Couldn't load the brain data (${err.message}). Reload the page to try again.`;
   }
